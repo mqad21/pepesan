@@ -15,6 +15,11 @@
   },
   "author": "mqad21",
   "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mqad21/pepesan"
+  },
+  "homepage": "https://github.com/mqad21/pepesan",
   "devDependencies": {
     "@jest/globals": "^29.2.2",
     "@types/ws": "^8.5.3",
