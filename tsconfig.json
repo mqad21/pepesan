@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "dist",
+    "strict": true,
+    "declaration": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "allowJs": false,
+    "noImplicitAny": false
+  },
+  "exclude": [
+    "node_modules",
+    "example"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+}
