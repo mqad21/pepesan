@@ -175,7 +175,7 @@ module.exports = class BotController extends Controller {
 
 Middleware is an async/sync function that return `Boolean` or `Response`.
 
-#### **`BotController.js`**
+#### **`AuthMiddleware.js`**
 
 ```javascript
 const { Response } = require("pepesan")
@@ -526,5 +526,7 @@ Response.button.fromArrayOfObject([{text: "yes", value: "1"}, {text:"no", value:
 
 ### **# Global Variable**
 
-#### **1. `sock`** -> access to `WASocket` object anywhere after initiate the `Pepesan` class. ####
-#### **2. `db`** -> access to `Database` object anywhere after initiate the `Pepesan` class. ####
+#### **1. `sock`** #### 
+Access to `WASocket` object anywhere after initiate the `Pepesan` class. 
+#### **2. `db`** ####
+Access to `Database` object anywhere after initiate the `Pepesan` class.
