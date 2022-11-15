@@ -349,7 +349,7 @@ router.state("loggedIn").group(() => {
     ```javascript
     async convertToMp3(request) {
         await this.reply("Please wait...")
-        await this.reply(Response.image.fromURL("...")
+        await this.reply(Response.image.fromURL("..."))
         const url = request.text
         const mp3 = await toMp3(url)
         return Response.audio.fromBuffer(mp3)
