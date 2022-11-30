@@ -41,7 +41,7 @@ export class Database {
             model.init(model.attributes, {
                 sequelize: this.sql!
             })
-            model.sync()
+            model.sync({ alter: true })
         }
     }
 }
