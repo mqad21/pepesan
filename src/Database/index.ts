@@ -11,12 +11,14 @@ export class Database {
     pass: string
     path: string
     models: typeof Model[]
+    syncAlter?: boolean
 
     constructor(dbConfig?: DbConfig, models?: typeof Model[]) {
         this.name = dbConfig?.name ?? 'pepesan'
         this.user = dbConfig?.user ?? 'admin'
         this.pass = dbConfig?.pass ?? '#p3p3s4n!'
         this.path = dbConfig?.path ?? './data.sqlite'
+        this.syncAlter = dbConfig?.syncAlter ?? false
         this.models = models ?? []
         this.initSql()
         this.initModels()
@@ -41,7 +43,7 @@ export class Database {
             model.init(model.attributes, {
                 sequelize: this.sql!
             })
-            model.sync({ alter: true })
+            model.sync({ alter: this.syncAlter })
         }
     }
 }

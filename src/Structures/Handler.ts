@@ -294,6 +294,23 @@ export class Handler {
         return
     }
 
+    async getResponseFromRequest(): Promise<MessageResponse> {
+        const media = await this.getMedia()
+        if (media) {
+            switch (this.request.type) {
+                case 'image':
+                    return Response.image.fromBuffer(media!, this.request.text)
+                case 'video':
+                    return Response.video.fromBuffer(media!, this.request.text, Buffer.from(this.request.video?.jpegThumbnail!), this.request.video?.gifPlayback!)
+                case 'sticker':
+                    return Response.sticker.fromBuffer(media!)
+                default:
+                    return Response.text.fromString(this.request.text!)
+            }
+        }
+        return Response.text.fromString(this.request.text!)
+    }
+
     async run() {
         await this.callback()
     }
