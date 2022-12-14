@@ -51,12 +51,13 @@ export type Request = {
     document?: proto.Message.IDocumentMessage
     image?: proto.Message.IImageMessage
     video?: proto.Message.IVideoMessage
+    audio?: proto.Message.IAudioMessage
     sticker?: proto.Message.IStickerMessage
     contact?: proto.Message.IContactMessage
     route?: Route
 }
 
-export type RequestType = 'image' | 'video' | 'document' | 'sticker'
+export type RequestType = 'image' | 'video' | 'document' | 'sticker' | 'audio'
 
 export type MessageHandler = {
     router: Router,
