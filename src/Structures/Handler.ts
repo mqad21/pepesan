@@ -294,6 +294,13 @@ export class Handler {
         return
     }
 
+    getResponseFromRequest(): MessageResponse {
+        if (this.request.type === 'image') {
+            return Response.image.fromURL(this.request.image?.url!)
+        }
+        return Response.text.fromString(this.request.text!)
+    }
+
     async run() {
         await this.callback()
     }

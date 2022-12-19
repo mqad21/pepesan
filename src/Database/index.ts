@@ -1,4 +1,4 @@
-import { Sequelize } from "sequelize"
+import { Dialect, Sequelize } from "sequelize"
 import { Model } from "../Structures"
 import { DbConfig } from "../Types"
 import * as PepesanModels from "./Models"
@@ -10,6 +10,7 @@ export class Database {
     user: string
     pass: string
     path: string
+    dialect: Dialect
     models: typeof Model[]
 
     constructor(dbConfig?: DbConfig, models?: typeof Model[]) {
@@ -17,6 +18,7 @@ export class Database {
         this.user = dbConfig?.user ?? 'admin'
         this.pass = dbConfig?.pass ?? '#p3p3s4n!'
         this.path = dbConfig?.path ?? './data.sqlite'
+        this.dialect = dbConfig?.dialect ?? 'sqlite'
         this.models = models ?? []
         this.initSql()
         this.initModels()
@@ -24,7 +26,7 @@ export class Database {
 
     private initSql() {
         this.sql = new Sequelize({
-            dialect: 'sqlite',
+            dialect: this.dialect,
             database: this.name,
             username: this.user,
             password: this.pass,

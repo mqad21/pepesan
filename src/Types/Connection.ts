@@ -1,5 +1,6 @@
 import { ConnectionState, WAMessage } from "@adiwajshing/baileys"
 import { Model } from "../Structures"
+import { Dialect } from "sequelize"
 
 export type Config = {
     printQRInTerminal?: boolean,
@@ -17,6 +18,7 @@ export type Config = {
 }
 
 export type DbConfig = {
+    dialect?: Dialect,
     name?: string,
     user?: string,
     pass?: string,
