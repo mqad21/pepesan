@@ -86,6 +86,7 @@ export class Handler {
             document: this.message?.documentMessage ?? undefined,
             image: this.message?.imageMessage ?? undefined,
             video: this.message?.videoMessage ?? undefined,
+            audio: this.message?.audioMessage ?? undefined,
             sticker: this.message?.stickerMessage ?? undefined,
             contact: this.message?.contactMessage ?? undefined,
             route: this._matchRoute
@@ -294,9 +295,21 @@ export class Handler {
         return
     }
 
-    getResponseFromRequest(): MessageResponse {
-        if (this.request.type === 'image') {
-            return Response.image.fromURL(this.request.image?.url!)
+    async getResponseFromRequest(): Promise<MessageResponse> {
+        const media = await this.getMedia()
+        if (media) {
+            switch (this.request.type) {
+                case 'image':
+                    return Response.image.fromBuffer(media!, this.request.text)
+                case 'video':
+                    return Response.video.fromBuffer(media!, this.request.text, Buffer.from(this.request.video?.jpegThumbnail!), this.request.video?.gifPlayback!)
+                case 'sticker':
+                    return Response.sticker.fromBuffer(media!)
+                case 'audio':
+                    return Response.audio.fromBuffer(media!, this.request.audio?.ptt!)
+                default:
+                    return Response.text.fromString(this.request.text!)
+            }
         }
         return Response.text.fromString(this.request.text!)
     }

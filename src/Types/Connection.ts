@@ -22,5 +22,6 @@ export type DbConfig = {
     name?: string,
     user?: string,
     pass?: string,
-    path?: string // path to .sqlite file
+    path?: string // path to .sqlite file,
+    syncAlter?: boolean
 }

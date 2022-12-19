@@ -3,12 +3,19 @@ import { MessageResponse } from "."
 
 export class Audio extends MessageResponse {
 
-    static fromURL(url: string) {
-        return new URLAudio(url)
+    ptt?: boolean
+
+    constructor(ptt?: boolean) {
+        super()
+        this.ptt = ptt ?? false
     }
 
-    static fromBuffer(buffer: Buffer) {
-        return new BufferAudio(buffer)
+    static fromURL(url: string, ptt?: boolean) {
+        return new URLAudio(url, ptt)
+    }
+
+    static fromBuffer(buffer: Buffer, ptt?: boolean) {
+        return new BufferAudio(buffer, ptt)
     }
 
     getMessageContent(): AnyMessageContent | undefined {
@@ -20,8 +27,8 @@ export class Audio extends MessageResponse {
 export class URLAudio extends Audio {
     url: string
 
-    constructor(url: string) {
-        super()
+    constructor(url: string, ptt?: boolean) {
+        super(ptt)
         this.url = url
     }
 
@@ -34,13 +41,13 @@ export class URLAudio extends Audio {
 export class BufferAudio extends Audio {
     buffer: Buffer
 
-    constructor(buffer: Buffer) {
-        super()
+    constructor(buffer: Buffer, ptt?: boolean) {
+        super(ptt)
         this.buffer = buffer
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return { audio: this.buffer, mimetype: 'audio/mp4' }
+        return { audio: this.buffer, mimetype: 'audio/mp4', ptt: this.ptt }
     }
 
 }

@@ -60,8 +60,8 @@ export class Controller {
         return await this.handler.checkParticipant(userJid, groupJid)
     }
 
-    protected getResponseFromRequest() {
-        return this.handler.getResponseFromRequest()
+    protected async getResponseFromRequest() {
+        return await this.handler.getResponseFromRequest()
     }
 
 }
