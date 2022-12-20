@@ -1,4 +1,4 @@
-import { isJidGroup, isJidUser } from '@adiwajshing/baileys'
+import { isJidGroup, isJidUser, proto } from '@adiwajshing/baileys'
 import axios from 'axios'
 import StringExtractor from './StringExtractor'
 
@@ -17,6 +17,29 @@ export const parseJid = (number: string) => {
 
 export const parseNumber = (jid: string) => {
     return jid.split("@s.whatsapp.net")[0]
+}
+
+export const getTextFromMessage = (message?: proto.IMessage): string => {
+    let text
+    if (message?.conversation) {
+        text = message?.conversation
+    }
+    if (message?.buttonsResponseMessage) {
+        text = message?.buttonsResponseMessage?.selectedDisplayText
+    }
+    if (message?.listResponseMessage) {
+        text = message?.listResponseMessage?.title
+    }
+    if (message?.extendedTextMessage) {
+        text = message?.extendedTextMessage?.text
+    }
+    if (message?.imageMessage) {
+        text = message?.imageMessage?.caption
+    }
+    if (message?.videoMessage) {
+        text = message?.videoMessage?.caption ?? undefined
+    }
+    return text?.replace("*", "") ?? ""
 }
 
 export const findAsyncSequential = async <T>(
