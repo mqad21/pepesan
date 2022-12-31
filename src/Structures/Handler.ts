@@ -1,6 +1,6 @@
 import { AnyMessageContent, DownloadableMessage, downloadContentFromMessage, downloadMediaMessage, getContentType, GroupParticipant, MessageType, proto, WAMessage } from "@adiwajshing/baileys"
 import { ButtonObject, Callback, MessageHandler, MessageResponse, Request, RequestType, Response, Route } from "../Types"
-import { filterAsync, findAsyncSequential, getObjectType, getParamsName, isTextMatch } from "../Utils"
+import { filterAsync, findAsyncSequential, getObjectType, getParamsName, getTextFromMessage, isTextMatch } from "../Utils"
 import StringExtractor from "../Utils/StringExtractor"
 import { Controller } from "./Controller"
 import { Router } from "./Router"
@@ -18,26 +18,7 @@ export class Handler {
     }
 
     private get text(): string {
-        let text
-        if (this.message?.conversation) {
-            text = this.message?.conversation
-        }
-        if (this.message?.buttonsResponseMessage) {
-            text = this.message?.buttonsResponseMessage?.selectedDisplayText
-        }
-        if (this.message?.listResponseMessage) {
-            text = this.message?.listResponseMessage?.title
-        }
-        if (this.message?.extendedTextMessage) {
-            text = this.message?.extendedTextMessage?.text
-        }
-        if (this.message?.imageMessage) {
-            text = this.message?.imageMessage?.caption
-        }
-        if (this.message?.videoMessage) {
-            text = this.message?.videoMessage?.caption ?? undefined
-        }
-        return text?.replace("*", "") ?? ""
+        return getTextFromMessage(this.message)
     }
 
     private get button(): ButtonObject {
