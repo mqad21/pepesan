@@ -11,6 +11,8 @@ export class Database {
     pass: string
     path: string
     dialect: Dialect
+    host: string
+    port: number
     models: typeof Model[]
     syncAlter?: boolean
 
@@ -20,6 +22,8 @@ export class Database {
         this.pass = dbConfig?.pass ?? '#p3p3s4n!'
         this.path = dbConfig?.path ?? './data.sqlite'
         this.dialect = dbConfig?.dialect ?? 'sqlite'
+        this.host = dbConfig?.host ?? 'localhost'
+        this.port = dbConfig?.port ?? 3306
         this.syncAlter = dbConfig?.syncAlter ?? false
         this.models = models ?? []
         this.initSql()
@@ -29,6 +33,8 @@ export class Database {
     private initSql() {
         this.sql = new Sequelize({
             dialect: this.dialect,
+            host: this.host,
+            port: this.port,
             database: this.name,
             username: this.user,
             password: this.pass,

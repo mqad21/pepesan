@@ -18,10 +18,12 @@ export type Config = {
 }
 
 export type DbConfig = {
-    dialect?: Dialect,
-    name?: string,
-    user?: string,
-    pass?: string,
-    path?: string // path to .sqlite file,
+    dialect?: Dialect
+    host?: string
+    port?: number
+    name?: string
+    user?: string
+    pass?: string
+    path?: string // path to .sqlite file
     syncAlter?: boolean
 }
