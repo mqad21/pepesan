@@ -13,6 +13,7 @@ export class Database {
     dialect: Dialect
     host: string
     port: number
+    timezone: string
     models: typeof Model[]
     syncAlter?: boolean
 
@@ -25,6 +26,7 @@ export class Database {
         this.host = dbConfig?.host ?? 'localhost'
         this.port = dbConfig?.port ?? 3306
         this.syncAlter = dbConfig?.syncAlter ?? false
+        this.timezone = dbConfig?.timezone ?? '+07:00'
         this.models = models ?? []
         this.initSql()
         this.initModels()
@@ -39,6 +41,7 @@ export class Database {
             username: this.user,
             password: this.pass,
             storage: this.path,
+            timezone: this.timezone,
             define: {
                 underscored: true
             }

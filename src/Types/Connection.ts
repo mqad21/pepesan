@@ -26,4 +26,5 @@ export type DbConfig = {
     pass?: string
     path?: string // path to .sqlite file
     syncAlter?: boolean
+    timezone?: string
 }
