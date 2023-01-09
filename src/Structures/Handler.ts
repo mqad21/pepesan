@@ -175,6 +175,9 @@ export class Handler {
             case 'button':
                 text = this.button.value
                 break
+            case 'list':
+                text = this.list.value
+                break
             default:
                 text = this.text
                 break
