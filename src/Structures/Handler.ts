@@ -1,5 +1,5 @@
 import { AnyMessageContent, DownloadableMessage, downloadContentFromMessage, downloadMediaMessage, getContentType, GroupParticipant, MessageType, proto, WAMessage } from "@adiwajshing/baileys"
-import { ButtonObject, Callback, MessageHandler, MessageResponse, Request, RequestType, Response, Route } from "../Types"
+import { ButtonObject, Callback, ListObject, MessageHandler, MessageResponse, Request, RequestType, Response, Route } from "../Types"
 import { filterAsync, findAsyncSequential, getObjectType, getParamsName, getTextFromMessage, isTextMatch } from "../Utils"
 import StringExtractor from "../Utils/StringExtractor"
 import { Controller } from "./Controller"
@@ -25,6 +25,14 @@ export class Handler {
         return {
             text: this.message?.buttonsResponseMessage?.selectedDisplayText!,
             value: this.message?.buttonsResponseMessage?.selectedButtonId!,
+        }
+    }
+
+    private get list(): ListObject {
+        return {
+            text: this.message?.listResponseMessage?.title!,
+            value: this.message?.listResponseMessage?.singleSelectReply?.selectedRowId!,
+            description: this.message?.listResponseMessage?.description!
         }
     }
 
@@ -57,6 +65,7 @@ export class Handler {
         return {
             text: this.text,
             button: this.button,
+            list: this.list,
             jid: this.jid,
             number: this.number,
             name: this.name,

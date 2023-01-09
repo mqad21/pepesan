@@ -41,6 +41,7 @@ export type Request = {
     key?: proto.IMessageKey | null
     text?: string
     button?: ButtonObject
+    list?: ListObject
     jid: string | null
     number?: string
     name?: string | null
