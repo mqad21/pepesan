@@ -126,6 +126,7 @@ export class Handler {
             if (route.type === 'keyword') return this.isKeywordMatch(path, this.text)
             if (route.type === 'state') return await this.isStateMatch(path)
             if (route.type === 'button') return await this.isButtonMatch(path, this.request.button)
+            if (route.type === 'list') return await this.isListMatch(path, this.request.list)
             return false
         })
     }
@@ -141,6 +142,11 @@ export class Handler {
     private async isButtonMatch(path: string, button?: ButtonObject) {
         if (!button) return false
         return isTextMatch(button.text, path) || isTextMatch(button.value, path)
+    }
+
+    private async isListMatch(path: string, list?: ListObject) {
+        if (!list) return false
+        return isTextMatch(list.text, path) || isTextMatch(list.value, path)
     }
 
     private async callback() {
