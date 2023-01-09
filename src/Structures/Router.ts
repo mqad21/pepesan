@@ -35,7 +35,7 @@ export class Router {
     }
 
     list(path: string, callback?: RouteCallback) {
-        const type = 'button'
+        const type = 'list'
         const middleware = async (request: Request) => isTextMatch(request.list?.text!, path) || isTextMatch(request.list?.value!, path)
         return this.initRoute(type, middleware, path, callback)
     }
