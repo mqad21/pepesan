@@ -79,6 +79,7 @@ export class Handler {
             audio: this.message?.audioMessage ?? undefined,
             sticker: this.message?.stickerMessage ?? undefined,
             contact: this.message?.contactMessage ?? undefined,
+            location: this.message?.locationMessage ?? undefined,
             route: this._matchRoute
         }
     }

@@ -55,6 +55,7 @@ export type Request = {
     audio?: proto.Message.IAudioMessage
     sticker?: proto.Message.IStickerMessage
     contact?: proto.Message.IContactMessage
+    location?: proto.Message.ILocationMessage
     route?: Route
 }
 
