@@ -1,4 +1,4 @@
-import makeWASocket, { AuthenticationState, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@adiwajshing/baileys"
+import makeWASocket, { AuthenticationState, Browsers, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@adiwajshing/baileys"
 import { Boom } from "@hapi/boom"
 import fs from 'fs'
 import path from 'path'
@@ -58,8 +58,7 @@ export default class Pepesan {
             const socketOptions: UserFacingSocketConfig = {
                 printQRInTerminal: this.printQRInTerminal,
                 version,
-                auth: state,
-                browser: [this.browserName, '', '']
+                auth: state
             }
             this.auth = state
             this.saveCreds = saveCreds
