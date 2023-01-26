@@ -114,6 +114,11 @@ export default class Pepesan {
                 } else if (this.state.connection === 'open') {
                     this.onOpen?.(this.state)
                 }
+
+                if (this.state.qr) {
+                    this.onQR?.(this.state)
+                }
+
             } catch (e) {
                 console.error(e)
             }
