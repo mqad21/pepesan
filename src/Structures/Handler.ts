@@ -65,6 +65,7 @@ export class Handler {
 
     get request(): Request {
         return {
+            clientId: this.clientId,
             text: this.text,
             button: this.button,
             list: this.list,
