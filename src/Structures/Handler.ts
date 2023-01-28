@@ -7,13 +7,15 @@ import { Router } from "./Router"
 import { State } from "./State"
 
 export class Handler {
+    public clientId: string
     private _messageInfo?: proto.IWebMessageInfo
     private _router?: Router
     private _stateObject?: State
     private _matchRoute?: Route
     private _state?: string | null
 
-    constructor(messageHandler: MessageHandler) {
+    constructor(clientId: string, messageHandler: MessageHandler) {
+        this.clientId = clientId
         this._router = messageHandler.router
     }
 

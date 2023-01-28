@@ -1,4 +1,4 @@
-import makeWASocket, { AuthenticationState, Browsers, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@adiwajshing/baileys"
+import makeWASocket, { AuthenticationState, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@adiwajshing/baileys"
 import { Boom } from "@hapi/boom"
 import fs from 'fs'
 import path from 'path'
@@ -9,6 +9,7 @@ import { Config, DbConfig } from "../Types"
 import { parseJid } from "../Utils"
 
 export default class Pepesan {
+    id: string
     sessionPath: string
     printQRInTerminal: boolean
     browserName: string
@@ -31,6 +32,7 @@ export default class Pepesan {
     sock?: WASocket
 
     constructor(router: Router, config?: Config) {
+        this.id = config?.id ?? 'Pepesan'
         this.sessionPath = config?.sessionPath ?? './session'
         this.browserName = config?.browserName ?? 'Pepesan'
         this.allowedJids = config?.allowedNumbers?.map((number: string) => parseJid(number))
@@ -58,7 +60,8 @@ export default class Pepesan {
             const socketOptions: UserFacingSocketConfig = {
                 printQRInTerminal: this.printQRInTerminal,
                 version,
-                auth: state
+                auth: state,
+                browser: [this.browserName, '', '']
             }
             this.auth = state
             this.saveCreds = saveCreds
@@ -131,7 +134,7 @@ export default class Pepesan {
                     if (!messageInfo.key.fromMe) {
                         const jid = messageInfo.key.remoteJid ?? ''
                         if (!jid.includes('@g.us') && !jid.includes('status@broadcast') && this.isAllowedJid(jid)) {
-                            this.handler = new Handler({ router: this.router })
+                            this.handler = new Handler(this.id, { router: this.router })
                             await this.handler.setMessageInfo(messageInfo)
                             await this.handler.run()
                         }
