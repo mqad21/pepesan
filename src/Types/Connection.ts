@@ -3,6 +3,7 @@ import { Model } from "../Structures"
 import { Dialect } from "sequelize"
 
 export type Config = {
+    id?: string,
     printQRInTerminal?: boolean,
     sessionPath?: string,
     browserName?: string,

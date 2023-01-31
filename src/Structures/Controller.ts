@@ -1,4 +1,4 @@
-import { AnyMessageContent, proto, WAMessage } from "@adiwajshing/baileys"
+import { WAMessage } from "@adiwajshing/baileys"
 import { MessageResponse } from "../Types"
 import { parseJid } from "../Utils"
 import { Handler } from "./Handler"

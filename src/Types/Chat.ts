@@ -38,6 +38,7 @@ export class Response {
 
 export type Request = {
     id?: string | null
+    clientId?: string | null
     key?: proto.IMessageKey | null
     text?: string
     button?: ButtonObject
