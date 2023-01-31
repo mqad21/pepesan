@@ -76,7 +76,7 @@ export default class Pepesan {
 
     async disconnect(deleteSession: boolean = false): Promise<void> {
         try {
-            await this.sock?.ws?.close()
+            await this.sock?.ws?.terminate()
         } catch (e) {
             console.error(e)
         } finally {
