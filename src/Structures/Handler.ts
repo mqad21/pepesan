@@ -100,28 +100,33 @@ export class Handler {
     }
 
     private async getMatchRoute(): Promise<Route | undefined> {
-        const matchRoutes = await this.getMatchRoutes()
+        try {
+            const matchRoutes = await this.getMatchRoutes()
 
-        if (!matchRoutes) return
-        return findAsyncSequential(matchRoutes, async (route: Route) => {
-            for await (const middleware of route.middlewares!) {
-                this._matchRoute = route
-                const result = await middleware(this.request, () => true)
-                if (result === false) return false
+            if (!matchRoutes) return
+            return findAsyncSequential(matchRoutes, async (route: Route) => {
+                for await (const middleware of route.middlewares!) {
+                    this._matchRoute = route
+                    const result = await middleware(this.request, () => true)
+                    if (result === false) return false
 
-                const type = getObjectType(result, 2)
+                    const type = getObjectType(result, 2)
 
-                if (type === 'MessageResponse') {
-                    route.callback = function () {
-                        return result
+                    if (type === 'MessageResponse') {
+                        route.callback = function () {
+                            return result
+                        }
+                        return route
+                    } else {
+                        route.callback = route.originCallback
                     }
-                    return route
-                } else {
-                    route.callback = route.originCallback
                 }
-            }
-            return true
-        })
+                return true
+            })
+        } catch (e) {
+            console.error(e)
+            return
+        }
     }
 
     private getMatchRoutes(): Promise<Route[]> {
