@@ -1,4 +1,4 @@
-import { proto } from "@adiwajshing/baileys"
+import { WASocket, proto } from "@adiwajshing/baileys"
 import { Router } from "../Structures"
 import { State } from "../Structures/State"
 import { Audio, Button, Image, List, Sticker, Text, Video } from "./Response"
@@ -64,7 +64,7 @@ export type RequestType = 'image' | 'video' | 'document' | 'sticker' | 'audio'
 
 export type MessageHandler = {
     router: Router,
-    socket: 
+    socket?: WASocket 
 }
 
 export type ButtonObject = { text: string, value: string }

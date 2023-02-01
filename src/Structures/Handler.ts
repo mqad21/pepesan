@@ -8,7 +8,7 @@ import { State } from "./State"
 
 export class Handler {
     public clientId: string
-    public socket: WASocket
+    public socket?: WASocket
     private _messageInfo?: proto.IWebMessageInfo
     private _router?: Router
     private _stateObject?: State
@@ -283,25 +283,25 @@ export class Handler {
     }
 
     async send(jid: string | null, message?: AnyMessageContent) {
-        if (jid && message) return await this.socket.sendMessage(jid, message)
+        if (jid && message) return await this.socket?.sendMessage(jid, message)
         return
     }
 
     async addToGroup(userJid: string, groupJid: string) {
-        return await this.socket.groupParticipantsUpdate(groupJid, [userJid], 'add')
+        return await this.socket?.groupParticipantsUpdate(groupJid, [userJid], 'add')
     }
 
     async checkParticipant(userJid: string, groupJid: string): Promise<boolean> {
-        const groupMetaData = await this.socket.groupMetadata(groupJid)
-        return groupMetaData.participants.findIndex((participant: GroupParticipant) => participant.id === userJid) !== -1
+        const groupMetaData = await this.socket?.groupMetadata(groupJid)
+        return groupMetaData?.participants.findIndex((participant: GroupParticipant) => participant.id === userJid) !== -1
     }
 
     async forwardMessage(jid: string, quoted?: WAMessage) {
-        return await this.socket.sendMessage(jid, { forward: this._messageInfo! }, { quoted })
+        return await this.socket?.sendMessage(jid, { forward: this._messageInfo! }, { quoted })
     }
 
     async sendQuoted(jid: string, message?: AnyMessageContent, quoted?: WAMessage) {
-        if (jid && message) return await this.socket.sendMessage(jid, message, { quoted })
+        if (jid && message) return await this.socket?.sendMessage(jid, message, { quoted })
         return
     }
 
