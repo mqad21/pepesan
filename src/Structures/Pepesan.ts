@@ -98,9 +98,9 @@ export default class Pepesan {
     }
 
     private initEvents(): void {
-        global.sock?.ev.on('creds.update', this.saveCreds)
+        this.sock?.ev.on('creds.update', this.saveCreds)
 
-        global.sock?.ev.on('connection.update', async (connectionState: Partial<ConnectionState>) => {
+        this.sock?.ev.on('connection.update', async (connectionState: Partial<ConnectionState>) => {
             try {
                 this.state = connectionState
                 if (this.state.connection === 'close') {
@@ -127,7 +127,7 @@ export default class Pepesan {
             }
         })
 
-        global.sock?.ev.on('messages.upsert', async ({ messages }: { messages: WAMessage[] }) => {
+        this.sock?.ev.on('messages.upsert', async ({ messages }: { messages: WAMessage[] }) => {
             try {
                 const messageInfos = messages
                 if (messageInfos && messageInfos.length) {
@@ -135,7 +135,7 @@ export default class Pepesan {
                     if (!messageInfo.key.fromMe) {
                         const jid = messageInfo.key.remoteJid ?? ''
                         if (!jid.includes('@g.us') && !jid.includes('status@broadcast') && this.isAllowedJid(jid)) {
-                            this.handler = new Handler(this.id, { router: this.router })
+                            this.handler = new Handler(this.id, { router: this.router, socket: this.sock })
                             await this.handler.setMessageInfo(messageInfo)
                             await this.handler.run()
                         }

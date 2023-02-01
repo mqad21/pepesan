@@ -1,4 +1,4 @@
-import { AnyMessageContent, DownloadableMessage, downloadContentFromMessage, downloadMediaMessage, getContentType, GroupParticipant, MessageType, proto, WAMessage } from "@adiwajshing/baileys"
+import { AnyMessageContent, DownloadableMessage, downloadContentFromMessage, downloadMediaMessage, getContentType, GroupParticipant, MessageType, proto, WAMessage, WASocket } from "@adiwajshing/baileys"
 import { ButtonObject, Callback, ListObject, MessageHandler, MessageResponse, Request, RequestType, Response, Route } from "../Types"
 import { filterAsync, findAsyncSequential, getObjectType, getParamsName, getTextFromMessage, isTextMatch } from "../Utils"
 import StringExtractor from "../Utils/StringExtractor"
@@ -8,6 +8,7 @@ import { State } from "./State"
 
 export class Handler {
     public clientId: string
+    public socket: WASocket
     private _messageInfo?: proto.IWebMessageInfo
     private _router?: Router
     private _stateObject?: State
@@ -17,6 +18,7 @@ export class Handler {
     constructor(clientId: string, messageHandler: MessageHandler) {
         this.clientId = clientId
         this._router = messageHandler.router
+        this.socket = messageHandler.socket
     }
 
     private get text(): string {
@@ -281,25 +283,25 @@ export class Handler {
     }
 
     async send(jid: string | null, message?: AnyMessageContent) {
-        if (jid && message) return await sock?.sendMessage(jid, message)
+        if (jid && message) return await this.socket.sendMessage(jid, message)
         return
     }
 
     async addToGroup(userJid: string, groupJid: string) {
-        return await sock?.groupParticipantsUpdate(groupJid, [userJid], 'add')
+        return await this.socket.groupParticipantsUpdate(groupJid, [userJid], 'add')
     }
 
     async checkParticipant(userJid: string, groupJid: string): Promise<boolean> {
-        const groupMetaData = await sock?.groupMetadata(groupJid)
+        const groupMetaData = await this.socket.groupMetadata(groupJid)
         return groupMetaData.participants.findIndex((participant: GroupParticipant) => participant.id === userJid) !== -1
     }
 
     async forwardMessage(jid: string, quoted?: WAMessage) {
-        return await sock?.sendMessage(jid, { forward: this._messageInfo! }, { quoted })
+        return await this.socket.sendMessage(jid, { forward: this._messageInfo! }, { quoted })
     }
 
     async sendQuoted(jid: string, message?: AnyMessageContent, quoted?: WAMessage) {
-        if (jid && message) return await sock?.sendMessage(jid, message, { quoted })
+        if (jid && message) return await this.socket.sendMessage(jid, message, { quoted })
         return
     }
 

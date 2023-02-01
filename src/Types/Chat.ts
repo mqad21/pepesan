@@ -64,6 +64,7 @@ export type RequestType = 'image' | 'video' | 'document' | 'sticker' | 'audio'
 
 export type MessageHandler = {
     router: Router,
+    socket: 
 }
 
 export type ButtonObject = { text: string, value: string }
