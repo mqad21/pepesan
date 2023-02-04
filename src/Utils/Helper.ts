@@ -142,8 +142,6 @@ export const getParamsName = (fun: Function): string[] => {
     const stripComments = /(\/\/.*$)|(\/\*[\s\S]*?\*\/)|(\s*=[^,\)]*(('(?:\\'|[^'\r\n])*')|("(?:\\"|[^"\r\n])*"))|(\s*=[^,\)]*))/mg
     const argumentNames = /([^\s,]+)/g
     const fnStr = fun.toString().replace(stripComments, '')
-    let result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(argumentNames)
-    if (result === null)
-        result = []
+    let result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(argumentNames) ?? []
     return result
 }
