@@ -6,7 +6,8 @@ import { MessageInfoTest } from "./types"
 export const initTest = () => {
     Pepesan.init(router, {
         db: {
-            path: "./example/data.sqlite"
+            path: "./example/data.sqlite",
+            timezone: "+00:00"
         }
     })
 }
@@ -27,8 +28,8 @@ export const generateMessageInfo = (messageInfoTest: MessageInfoTest): proto.IWe
     } as proto.IWebMessageInfo
 }
 
-export const initHandler = async (messageInfo: proto.IWebMessageInfo, state?: string) => {
-    const handler = new Handler({ router })
+export const initHandler = async (clientId: string, messageInfo: proto.IWebMessageInfo, state?: string) => {
+    const handler = new Handler(clientId, { router })
     await handler.setMessageInfo(messageInfo)
     handler["_state"] = state
     return handler

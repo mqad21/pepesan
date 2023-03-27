@@ -27,4 +27,24 @@ module.exports = class BotController extends Controller {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
+    showMenu(request) {
+        return Response.menu.fromArrayOfString(request.jid, ["menu 1", "menu 2", "menu 3"])
+    }
+
+    selectMenu(request, menu) {
+        return `You selected menu ${menu}`
+    }
+
+    showOption(request) {
+        return Response.menu.fromArrayOfObject(request.jid, [
+            {text: "Option 1", value: "option_1"},
+            {text: "Option 2", value: "option_2"},
+            {text: "Option 3", value: "option_3"},
+        ], "Select an option")
+    }
+
+    selectOption(request, option) {
+        return `You selected option ${option}`
+    }
+
 }

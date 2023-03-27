@@ -1,5 +1,6 @@
 import { Middleware, Next, ParamMiddleware, Request, Route, RouteCallback, RouteMap, RouteType } from "../Types"
 import { isTextMatch } from "../Utils"
+import { Menu } from "./Menu"
 
 export class Router {
 
@@ -31,6 +32,22 @@ export class Router {
     button(path: string, callback?: RouteCallback) {
         const type = 'button'
         const middleware = async (request: Request) => isTextMatch(request.button?.text!, path) || isTextMatch(request.button?.value!, path)
+        return this.initRoute(type, middleware, path, callback)
+    }
+
+    menu(path: string, callback?: RouteCallback) {
+        const type = 'menu'
+        const middleware = async (request: Request) => {
+            const menu = request.menu
+            if (!menu) return false
+            const menuObject = new Menu(request.jid!)
+            const menus = await menuObject.get()
+            if (menus.includes(path)) {
+                await menuObject.deleteMenu()
+                return true
+            }
+            return false
+        }
         return this.initRoute(type, middleware, path, callback)
     }
 

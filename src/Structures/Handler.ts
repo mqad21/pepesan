@@ -5,6 +5,7 @@ import StringExtractor from "../Utils/StringExtractor"
 import { Controller } from "./Controller"
 import { Router } from "./Router"
 import { State } from "./State"
+import { Menu } from "./Menu"
 
 export class Handler {
     public clientId: string
@@ -12,8 +13,10 @@ export class Handler {
     private _messageInfo?: proto.IWebMessageInfo
     private _router?: Router
     private _stateObject?: State
+    private _menuObject?: Menu
     private _matchRoute?: Route
     private _state?: string | null
+    private _menus?: any[] | null
 
     constructor(clientId: string, messageHandler: MessageHandler) {
         this.clientId = clientId
@@ -30,6 +33,14 @@ export class Handler {
             text: this.message?.buttonsResponseMessage?.selectedDisplayText!,
             value: this.message?.buttonsResponseMessage?.selectedButtonId!,
         }
+    }
+
+    private get menu(): number | undefined {
+        const conversation = this.message?.conversation
+        if (!conversation) return
+        const menuIndex = Number(conversation)
+        if (Number.isNaN(menuIndex)) return
+        return menuIndex
     }
 
     private get list(): ListObject {
@@ -70,6 +81,7 @@ export class Handler {
             clientId: this.clientId,
             text: this.text,
             button: this.button,
+            menu: this.menu,
             list: this.list,
             jid: this.jid,
             number: this.number,
@@ -95,9 +107,16 @@ export class Handler {
         this._stateObject = state
     }
 
+    private async initMenu() {
+        const menu = new Menu(this.jid!)
+        this._menus = await menu.get()
+        this._menuObject = menu
+    }
+
     async setMessageInfo(messageInfo: proto.IWebMessageInfo) {
         this._messageInfo = messageInfo
         await this.initState()
+        await this.initMenu()
         return this
     }
 
@@ -138,6 +157,7 @@ export class Handler {
             if (route.type === 'state') return await this.isStateMatch(path)
             if (route.type === 'button') return await this.isButtonMatch(path, this.request.button)
             if (route.type === 'list') return await this.isListMatch(path, this.request.list)
+            if (route.type === 'menu') return this.isMenuMatch(path, this.request.menu)
             return false
         })
     }
@@ -158,6 +178,14 @@ export class Handler {
     private async isListMatch(path: string, list?: ListObject) {
         if (!list) return false
         return isTextMatch(list.text, path) || isTextMatch(list.value, path)
+    }
+
+    private async isMenuMatch(path: string, menu?: number) {
+        if (!menu) return false
+        const menus = await this._menuObject?.get()
+        const selectedMenu = menus[menu - 1]
+        if (!selectedMenu) return false
+        return isTextMatch(selectedMenu, path)
     }
 
     private async callback() {
@@ -188,6 +216,14 @@ export class Handler {
                 break
             case 'list':
                 text = this.list.value
+                break
+            case 'menu':
+                if (this.menu) {
+                    text = this._menus?.[this.menu - 1]
+                    if (text) {
+                        await this._menuObject?.deleteMenu()
+                    }
+                }
                 break
             default:
                 text = this.text

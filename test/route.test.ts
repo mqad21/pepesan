@@ -108,7 +108,7 @@ describe.each(routerTests)('\n$userMessage', (routerTest: RouterTest) => {
     let returnContent: AnyMessageContent | AnyMessageContent[] | undefined
 
     beforeAll(async () => {
-        handler = await initHandler(messageInfo, routerTest.state)
+        handler = await initHandler("test-client", messageInfo, routerTest.state)
         returnValue = await handler["getReturnValue"]() as MessageResponse
         returnContent = handler["getMessageContent"](returnValue) as AnyMessageContent[]
         if (returnContent?.length == 1) returnContent = returnContent[0]

@@ -7,7 +7,8 @@ const router = require("./router");
         browserName: 'My first chat bot',
         sessionPath: './example/session',
         db: {
-            path: './example/data.sqlite'
+            path: './example/data.sqlite',
+            timezone: '+00:00'
         }
     }
 

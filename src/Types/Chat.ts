@@ -1,7 +1,7 @@
 import { WASocket, proto } from "@adiwajshing/baileys"
 import { Router } from "../Structures"
 import { State } from "../Structures/State"
-import { Audio, Button, Image, List, Sticker, Text, Video } from "./Response"
+import { Audio, Button, Image, List, Menu, Sticker, Text, Video } from "./Response"
 import { Route } from "./Routes"
 
 export class Response {
@@ -34,6 +34,10 @@ export class Response {
         return List
     }
 
+    static get menu() {
+        return Menu
+    }
+
 }
 
 export type Request = {
@@ -41,6 +45,7 @@ export type Request = {
     clientId?: string | null
     key?: proto.IMessageKey | null
     text?: string
+    menu?: number
     button?: ButtonObject
     list?: ListObject
     jid: string | null
@@ -70,3 +75,5 @@ export type MessageHandler = {
 export type ButtonObject = { text: string, value: string }
 
 export type ListObject = { text: string, value: string, description: string }
+
+export type MenuObject = { text: string, value: string }

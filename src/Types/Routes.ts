@@ -12,7 +12,7 @@ export type Route = {
     middlewares?: Middleware[],
 }
 
-export type RouteType = 'keyword' | 'state' | 'middleware' | 'button' | 'list'
+export type RouteType = 'keyword' | 'state' | 'middleware' | 'button' | 'list' | 'menu'
 
 export type RouteMap = Map<string, Route>
 
