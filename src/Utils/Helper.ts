@@ -145,3 +145,9 @@ export const getParamsName = (fun: Function): string[] => {
     let result = fnStr.slice(fnStr.indexOf('(') + 1, fnStr.indexOf(')')).match(argumentNames) ?? []
     return result
 }
+
+export const formatString = (text: string, params: any) => {
+    return text.replace(/\{([^}]+)\}/g, function (i, match) {
+        return params[match]
+    })
+}

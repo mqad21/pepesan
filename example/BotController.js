@@ -40,7 +40,7 @@ module.exports = class BotController extends Controller {
             {text: "Option 1", value: "option_1"},
             {text: "Option 2", value: "option_2"},
             {text: "Option 3", value: "option_3"},
-        ], "Select an option")
+        ], "Select an option", "Type *{number}*: for *{menu}*")
     }
 
     selectOption(request, option) {
