@@ -36,7 +36,7 @@ export class Handler {
     }
 
     private get menu(): number | undefined {
-        const conversation = this.message?.conversation
+        const conversation = this.text
         if (!conversation) return
         const menuIndex = Number(conversation)
         if (Number.isNaN(menuIndex)) return
