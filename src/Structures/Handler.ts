@@ -35,12 +35,11 @@ export class Handler {
         }
     }
 
-    private get menu(): number | undefined {
-        const conversation = this.text
-        if (!conversation) return
-        const menuIndex = Number(conversation)
-        if (Number.isNaN(menuIndex)) return
-        return menuIndex
+    private get menu(): string | undefined {
+        if (!this.text) return
+        const menuIndex = Number(this.text)
+        if (Number.isNaN(menuIndex)) return this.text
+        return (menuIndex - 1).toString()
     }
 
     private get list(): ListObject {
@@ -157,7 +156,7 @@ export class Handler {
             if (route.type === 'state') return await this.isStateMatch(path)
             if (route.type === 'button') return await this.isButtonMatch(path, this.request.button)
             if (route.type === 'list') return await this.isListMatch(path, this.request.list)
-            if (route.type === 'menu') return this.isMenuMatch(path, this.request.menu)
+            if (route.type === 'menu') return this.isMenuMatch(path, this.menu)
             return false
         })
     }
@@ -180,10 +179,10 @@ export class Handler {
         return isTextMatch(list.text, path) || isTextMatch(list.value, path)
     }
 
-    private async isMenuMatch(path: string, menu?: number) {
+    private async isMenuMatch(path: string, menu?: string) {
         if (!menu) return false
         const menus = await this._menuObject?.get()
-        const selectedMenu = menus[menu - 1]
+        const selectedMenu = menus[menu]
         if (!selectedMenu) return false
         return isTextMatch(selectedMenu, path)
     }
@@ -219,10 +218,7 @@ export class Handler {
                 break
             case 'menu':
                 if (this.menu) {
-                    text = this._menus?.[this.menu - 1]
-                    if (text) {
-                        await this._menuObject?.deleteMenu()
-                    }
+                    text = this._menus?.[this.menu]
                 }
                 break
             default:

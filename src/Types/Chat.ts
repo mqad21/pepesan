@@ -45,7 +45,7 @@ export type Request = {
     clientId?: string | null
     key?: proto.IMessageKey | null
     text?: string
-    menu?: number
+    menu?: string
     button?: ButtonObject
     list?: ListObject
     jid: string | null

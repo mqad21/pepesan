@@ -15,7 +15,7 @@ export class Menu {
         return JSON.parse(menuModel.menu ? menuModel.menu : "[]")
     }
 
-    async setMenu(menu: any[]) {
+    async setMenu(menu: any) {
         await MenuModel.update({ menu: JSON.stringify(menu) }, {
             where: {
                 jid: this.jid
