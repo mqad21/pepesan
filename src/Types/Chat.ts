@@ -76,4 +76,4 @@ export type ButtonObject = { text: string, value: string }
 
 export type ListObject = { text: string, value: string, description: string }
 
-export type MenuObject = { text: string, value: string }
+export type MenuObject = { text: string, value: string, code?: string }

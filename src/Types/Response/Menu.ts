@@ -77,7 +77,7 @@ export class ArrayOfObjectMenu extends Menu {
 
     get formattedMenus() {
         const menus = this.menus.map((menu: MenuObject, index: number) => {
-            return formatString(this.template, { number: index + 1, menu: menu.text })
+            return formatString(this.template, { number: menu.code ?? index + 1, menu: menu.text })
         })
         let formattedMenus = menus.join("\n")
         if (this.text) {
