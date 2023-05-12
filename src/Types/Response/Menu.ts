@@ -72,7 +72,7 @@ export class ArrayOfObjectMenu extends Menu {
     constructor(jid: string, menus: MenuObject[], text: string, template?: string, footer?: string) {
         super(text, jid, template, footer)
         this.menus = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [index, menu]))
-        this.saveToDatabase(Object.fromEntries(menus.map((menu: MenuObject, index: number) => [index, menu.value])))
+        this.saveToDatabase(Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index, menu.value])))
     }
 
     get formattedMenus() {
