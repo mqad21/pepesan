@@ -36,10 +36,7 @@ export class Handler {
     }
 
     private get menu(): string | undefined {
-        if (!this.text) return
-        const menuIndex = Number(this.text)
-        if (Number.isNaN(menuIndex)) return this.text
-        return (menuIndex - 1).toString()
+        return this.text
     }
 
     private get list(): ListObject {

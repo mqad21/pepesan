@@ -42,13 +42,13 @@ export class ArrayOfStringMenu extends Menu {
 
     constructor(jid: string, menus: string[], text: string, template?: string, footer?: string) {
         super(text, jid, template, footer)
-        this.menus = Object.fromEntries(menus.map((menu: string, index: number) => [index, menu]))
+        this.menus = Object.fromEntries(menus.map((menu: string, index: number) => [index + 1, menu]))
         this.saveToDatabase(this.menus)
     }
 
     get formattedMenus() {
-        const menus = Object.entries(this.menus).map(([key, value]: [string, string], index: number) => {
-            return formatString(this.template, { number: `${parseInt(key) + 1}`, menu: value })
+        const menus = Object.entries(this.menus).map(([key, value]: [string, string]) => {
+            return formatString(this.template, { number: key, menu: value })
         })
         let formattedMenus = menus.join("\n")
         if (this.text) {
@@ -71,13 +71,13 @@ export class ArrayOfObjectMenu extends Menu {
 
     constructor(jid: string, menus: MenuObject[], text: string, template?: string, footer?: string) {
         super(text, jid, template, footer)
-        this.menus = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [index, menu]))
-        this.saveToDatabase(Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index, menu.value])))
+        this.menus = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, menu]))
+        this.saveToDatabase(Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, menu.value])))
     }
 
     get formattedMenus() {
-        const menus = Object.entries(this.menus).map(([key, value]: [string, MenuObject], index: number) => {
-            return formatString(this.template, { number: value.code ?? index + 1, menu: value.text })
+        const menus = Object.entries(this.menus).map(([key, value]: [string, MenuObject]) => {
+            return formatString(this.template, { number: key, menu: value.text })
         })
         let formattedMenus = menus.join("\n")
         if (this.text) {
