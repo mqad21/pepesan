@@ -48,7 +48,7 @@ export class ArrayOfStringMenu extends Menu {
 
     get formattedMenus() {
         const menus = Object.entries(this.menus).map(([key, value]: [string, string], index: number) => {
-            return formatString(this.template, { number: key, menu: value })
+            return formatString(this.template, { number: `${parseInt(key) + 1}`, menu: value })
         })
         let formattedMenus = menus.join("\n")
         if (this.text) {
@@ -72,7 +72,7 @@ export class ArrayOfObjectMenu extends Menu {
     constructor(jid: string, menus: MenuObject[], text: string, template?: string, footer?: string) {
         super(text, jid, template, footer)
         this.menus = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [index, menu]))
-        this.saveToDatabase(Object.fromEntries(menus.map((menu: MenuObject, index: number) => [index, menu.text])))
+        this.saveToDatabase(Object.fromEntries(menus.map((menu: MenuObject, index: number) => [index, menu.value])))
     }
 
     get formattedMenus() {
