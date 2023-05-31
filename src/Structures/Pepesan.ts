@@ -47,7 +47,8 @@ export default class Pepesan {
         this.router = router
         this.dbConfig = {
             ...config?.db,
-            path: config?.db?.path ?? 'data.sqlite'
+            path: config?.db?.path ?? 'data.sqlite',
+            timezone: config?.db?.dialect === 'sqlite' ? '+00:00' : config?.db?.timezone ?? '+00:00',
         }
         this.models = config?.models
         this.initDatabase()
