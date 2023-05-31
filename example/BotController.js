@@ -28,7 +28,7 @@ module.exports = class BotController extends Controller {
     }
 
     showMenu(request) {
-        return Response.menu.fromArrayOfString(request.jid, ["menu 1", "menu 2", "menu 3"])
+        return Response.menu.fromArrayOfString(["menu 1", "menu 2", "menu 3"])
     }
 
     selectMenu(request, menu) {
@@ -36,7 +36,7 @@ module.exports = class BotController extends Controller {
     }
 
     showOption(request) {
-        return Response.menu.fromArrayOfObject(request.jid, [
+        return Response.menu.fromArrayOfObject([
             {text: "Option 1", value: "option_1"},
             {text: "Option 2", value: "option_2"},
             {text: "Option 3", value: "option_3"},

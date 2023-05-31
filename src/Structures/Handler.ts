@@ -5,6 +5,7 @@ import StringExtractor from "../Utils/StringExtractor"
 import { Controller } from "./Controller"
 import { Router } from "./Router"
 import { State } from "./State"
+import { Menu as ResponseMenu } from "../Types/Response/Menu"
 import { Menu } from "./Menu"
 
 export class Handler {
@@ -263,6 +264,10 @@ export class Handler {
                 const messageContent = this.getMessageContent(value)
                 messageContents.push(...messageContent)
             })
+        }
+
+        if (returnValue instanceof ResponseMenu) {
+            returnValue.saveToDatabase(this.jid)
         }
 
         return messageContents

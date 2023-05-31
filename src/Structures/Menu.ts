@@ -23,7 +23,7 @@ export class Menu {
         })
     }
 
-async deleteMenu() {
+    async deleteMenu() {
         await MenuModel.update({ menu: null }, {
             where: {
                 jid: this.jid
