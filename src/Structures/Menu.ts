@@ -12,10 +12,12 @@ export class Menu {
         const [menuModel] = await MenuModel.findOrCreate({
             where: { jid: this.jid }, defaults: { jid: this.jid, menu: "" },
         })
-        return JSON.parse(menuModel.menu ? menuModel.menu : "[]")
+        return JSON.parse(menuModel.menu ? menuModel.menu : "{}")
     }
 
     async setMenu(menu: any) {
+        const defaultMenu = await this.get()
+        menu = { ...defaultMenu, ...menu }
         await MenuModel.update({ menu: JSON.stringify(menu) }, {
             where: {
                 jid: this.jid

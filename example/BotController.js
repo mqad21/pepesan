@@ -27,8 +27,9 @@ module.exports = class BotController extends Controller {
         return new Promise(resolve => setTimeout(resolve, ms))
     }
 
-    showMenu(request) {
-        return Response.menu.fromArrayOfString(["menu 1", "menu 2", "menu 3"])
+    async showMenu(request) {
+        await this.reply(Response.menu.fromArrayOfString(["menu 1", "menu 2", "menu 3"]))
+        return Response.menu.fromArrayOfString(["menu 4", "menu 5"])
     }
 
     selectMenu(request, menu) {
@@ -37,9 +38,9 @@ module.exports = class BotController extends Controller {
 
     showOption(request) {
         return Response.menu.fromArrayOfObject([
-            {text: "Option 1", value: "option_1"},
-            {text: "Option 2", value: "option_2"},
-            {text: "Option 3", value: "option_3"},
+            { text: "Option 1", value: "option_1" },
+            { text: "Option 2", value: "option_2" },
+            { text: "Option 3", value: "option_3" },
         ], "Select an option", "Type *{number}*: for *{menu}*")
     }
 
