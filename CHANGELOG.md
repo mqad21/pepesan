@@ -7,6 +7,7 @@
 
 - Model synchronization with alter table
 
+
 ## 1.0.0 (2022-11-15)
 
 - Update README.md

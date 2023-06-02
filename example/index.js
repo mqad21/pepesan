@@ -9,7 +9,9 @@ const router = require("./router");
         allowedNumbers: ['6281260743660'],
         db: {
             path: './example/data.sqlite',
-        }
+        },
+        menuTemplate: "Ketik *{number}* -> *{menu}*",
+        menuHeader: "===== Pilihan Menu ====="
     }
 
     const pepesan = Pepesan.init(router, config)

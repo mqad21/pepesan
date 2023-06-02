@@ -7,13 +7,16 @@ import { formatString } from "../../Utils"
 export class Menu extends MessageResponse {
     text: string
     template: string
+    header?: string
     footer?: string
     databaseMenu?: { [key: number]: string }
 
     constructor(text: string, template?: string, footer?: string) {
         super()
+        const { menuHeader, menuTemplate } = global.CONFIG
+        this.header = menuHeader
         this.text = text
-        this.template = template ?? "{number}. {menu}"
+        this.template = template ?? menuTemplate ?? "{number}. {menu}"
         this.footer = footer
     }
 
@@ -51,6 +54,9 @@ export class ArrayOfStringMenu extends Menu {
             return formatString(this.template, { number: key, menu: value })
         })
         let formattedMenus = menus.join("\n")
+        if (this.header) {
+            formattedMenus = this.header + "\n\n" + formattedMenus
+        }
         if (this.text) {
             formattedMenus = this.text + "\n\n" + formattedMenus
         }

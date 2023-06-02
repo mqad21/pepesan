@@ -52,6 +52,7 @@ export default class Pepesan {
         }
         this.models = config?.models
         this.initDatabase()
+        global.CONFIG = config
     }
 
     async connect(): Promise<void> {

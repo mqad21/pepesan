@@ -15,7 +15,9 @@ export type Config = {
     onQR?: (state: Partial<ConnectionState>) => void,
     onMessage?: (message: WAMessage) => Promise<void>,
     db?: DbConfig,
-    models?: typeof Model[]
+    models?: typeof Model[],
+    menuTemplate?: string,
+    menuHeader?: string,
 }
 
 export type DbConfig = {
