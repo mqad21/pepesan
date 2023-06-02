@@ -86,6 +86,9 @@ export class ArrayOfObjectMenu extends Menu {
             return formatString(this.template, { number: key, menu: value.text })
         })
         let formattedMenus = menus.join("\n")
+        if (this.header) {
+            formattedMenus = this.header + "\n\n" + formattedMenus
+        }
         if (this.text) {
             formattedMenus = this.text + "\n\n" + formattedMenus
         }
