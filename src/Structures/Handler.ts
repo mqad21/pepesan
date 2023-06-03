@@ -130,7 +130,9 @@ export class Handler {
 
                     const type = getObjectType(result, 2)
 
-                    if (type === 'MessageResponse') {
+                    const isResponse = type === 'MessageResponse' || typeof result === 'string' || Array.isArray(result)
+
+                    if (isResponse) {
                         route.callback = function () {
                             return result
                         }
