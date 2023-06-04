@@ -2,4 +2,5 @@
 dist
 node_modules
 example/session
+example/state
 example/data.sqlite

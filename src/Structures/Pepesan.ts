@@ -31,26 +31,35 @@ export default class Pepesan {
     models?: typeof Model[]
     sock?: WASocket
 
-    constructor(router: Router, config?: Config) {
-        this.id = config?.id ?? 'Pepesan'
-        this.sessionPath = config?.sessionPath ?? './session'
-        this.browserName = config?.browserName ?? 'Pepesan'
-        this.allowedJids = config?.allowedNumbers?.map((number: string) => parseJid(number))
-        this.blockedJids = config?.blockedNumbers?.map((number: string) => parseJid(number))
-        this.printQRInTerminal = config?.printQRInTerminal ?? true
+    constructor(router: Router, config: Config = {}) {
+        this.id = config.id ?? 'Pepesan'
+        this.sessionPath = config.sessionPath ?? './session'
+        this.browserName = config.browserName ?? 'Pepesan'
+        this.allowedJids = config.allowedNumbers?.map((number: string) => parseJid(number))
+        this.blockedJids = config.blockedNumbers?.map((number: string) => parseJid(number))
+        this.printQRInTerminal = config.printQRInTerminal ?? true
         this.isEventRegistered = false
-        this.onOpen = config?.onOpen
-        this.onClose = config?.onClose
-        this.onReconnect = config?.onReconnect
-        this.onQR = config?.onQR
-        this.onMessage = config?.onMessage
+        this.onOpen = config.onOpen
+        this.onClose = config.onClose
+        this.onReconnect = config.onReconnect
+        this.onQR = config.onQR
+        this.onMessage = config.onMessage
         this.router = router
         this.dbConfig = {
-            ...config?.db,
-            path: config?.db?.path ?? 'data.sqlite',
-            timezone: config?.db?.dialect === 'sqlite' ? '+00:00' : config?.db?.timezone ?? '+00:00',
+            ...config.db,
+            path: config.db?.path ?? 'data.sqlite',
+            timezone: config.db?.dialect === 'sqlite' ? '+00:00' : config.db?.timezone ?? '+00:00',
         }
-        this.models = config?.models
+        this.models = config.models
+
+        config.stateType = config.stateType ?? 'db'
+        config.statePath = config.statePath ?? './state'
+        config.statePrefixLength = config.statePrefixLength ?? 9
+
+        if (!fs.existsSync(config.statePath)) {
+            fs.mkdirSync(config.statePath)
+        }
+        
         this.initDatabase()
         global.CONFIG = config
     }

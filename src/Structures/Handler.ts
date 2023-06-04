@@ -189,11 +189,13 @@ export class Handler {
 
     private async callback() {
         try {
+            // console.time('callback')
             const returnValue = await this.getReturnValue()
             const messageContents = this.getMessageContent(returnValue)
             for (const content of messageContents) {
                 await this.reply(content)
             }
+            // console.timeEnd('callback')
         } catch (e) {
             console.error(e)
             throw e

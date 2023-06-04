@@ -28,4 +28,8 @@ router.state("loggedIn").group(() => {
     router.keyword("View my balance", [BotController, 'viewBalance'])
 })
 
+router.keyword("login", [BotController, 'login'])
+
+router.keyword("logout", [BotController, 'logout'])
+
 module.exports = router

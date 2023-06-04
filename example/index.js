@@ -11,9 +11,11 @@ const router = require("./router");
             path: './example/data.sqlite',
         },
         menuTemplate: "Ketik *{number}* -> *{menu}*",
-        menuHeader: "===== Pilihan Menu ====="
+        menuHeader: "===== Pilihan Menu =====",
+        stateType: 'file',
+        statePath: './example/state',
     }
-
+    
     const pepesan = Pepesan.init(router, config)
     await pepesan.connect()
 

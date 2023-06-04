@@ -1,6 +1,6 @@
 {
   "name": "pepesan",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Simple automatic WhatsApp message responder",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -44,7 +44,8 @@
   },
   "nodemonConfig": {
     "ignore": [
-      "./example/session/*"
+      "./example/session/*",
+      "./example/state/*"
     ]
   },
   "files": [

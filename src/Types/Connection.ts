@@ -18,6 +18,9 @@ export type Config = {
     models?: typeof Model[],
     menuTemplate?: string,
     menuHeader?: string,
+    stateType?: 'db' | 'file',
+    statePath?: string,
+    statePrefixLength?: number,
 }
 
 export type DbConfig = {

@@ -48,4 +48,14 @@ module.exports = class BotController extends Controller {
         return `You selected option ${option}`
     }
 
+    async login(request) {
+        await this.setState("login")
+        return Response.text.fromString("You are logged in")
+    }
+
+    async logout(request) {
+        await this.deleteState()
+        return Response.text.fromString("You are logged out")
+    }
+
 }
