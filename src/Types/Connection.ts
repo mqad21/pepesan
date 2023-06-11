@@ -4,6 +4,7 @@ import { Dialect } from "sequelize"
 
 export type Config = {
     id?: string,
+    version?: [number, number, number],
     printQRInTerminal?: boolean,
     sessionPath?: string,
     browserName?: string,

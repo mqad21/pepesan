@@ -10,6 +10,7 @@ import { parseJid } from "../Utils"
 
 export default class Pepesan {
     id: string
+    version?: [number, number, number]
     sessionPath: string
     printQRInTerminal: boolean
     browserName: string
@@ -33,6 +34,7 @@ export default class Pepesan {
 
     constructor(router: Router, config: Config = {}) {
         this.id = config.id ?? 'Pepesan'
+        this.version = config.version ?? [2, 2323, 4]
         this.sessionPath = config.sessionPath ?? './session'
         this.browserName = config.browserName ?? 'Pepesan'
         this.allowedJids = config.allowedNumbers?.map((number: string) => parseJid(number))
@@ -59,18 +61,18 @@ export default class Pepesan {
         if (!fs.existsSync(config.statePath)) {
             fs.mkdirSync(config.statePath)
         }
-        
+
         this.initDatabase()
         global.CONFIG = config
     }
 
     async connect(): Promise<void> {
         try {
-            const { version } = await fetchLatestBaileysVersion()
+            // const { version } = await fetchLatestBaileysVersion()
             const { state, saveCreds } = await useMultiFileAuthState(this.sessionPath)
             const socketOptions: UserFacingSocketConfig = {
                 printQRInTerminal: this.printQRInTerminal,
-                version,
+                version: this.version,
                 auth: state,
                 browser: [this.browserName, '', '']
             }
