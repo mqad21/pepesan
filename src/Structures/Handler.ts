@@ -182,7 +182,7 @@ export class Handler {
     private async isMenuMatch(path: string, menu?: string) {
         if (!menu) return false
         const menus = await this._menuObject?.get()
-        const selectedMenu = menus[menu]
+        const selectedMenu = menus[menu.toLowerCase()]
         if (!selectedMenu) return false
         return isTextMatch(selectedMenu, path)
     }
