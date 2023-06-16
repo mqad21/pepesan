@@ -23,8 +23,8 @@ export class Controller {
 
     protected async send(number: string, response: MessageResponse | MessageResponse[] | string | string[] | any[]) {
         const messages: (WAMessage | undefined)[] = []
-        const contents = this.handler.getMessageContent(response)
         const jid = parseJid(number)
+        const contents = this.handler.getMessageContent(response, jid)
         for (const content of contents) {
             const message = await this.handler.send(jid, content)
             messages.push(message)

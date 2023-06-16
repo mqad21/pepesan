@@ -253,7 +253,7 @@ export class Handler {
         return returnValue
     }
 
-    getMessageContent(returnValue: any): AnyMessageContent[] {
+    getMessageContent(returnValue: any, targetJid?: string): AnyMessageContent[] {
         const type = getObjectType(returnValue, 2)
 
         const messageContents: AnyMessageContent[] = []
@@ -271,7 +271,7 @@ export class Handler {
         }
 
         if (returnValue instanceof ResponseMenu) {
-            returnValue.saveToDatabase(this.jid)
+            returnValue.saveToDatabase(targetJid ?? this.jid)
         }
 
         return messageContents
