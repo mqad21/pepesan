@@ -22,6 +22,7 @@ export type Config = {
     stateType?: 'db' | 'file',
     statePath?: string,
     statePrefixLength?: number,
+    readBeforeReply?: boolean,
 }
 
 export type DbConfig = {

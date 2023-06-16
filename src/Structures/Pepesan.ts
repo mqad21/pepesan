@@ -57,6 +57,7 @@ export default class Pepesan {
         config.stateType = config.stateType ?? 'db'
         config.statePath = config.statePath ?? './state'
         config.statePrefixLength = config.statePrefixLength ?? 9
+        config.readBeforeReply = config.readBeforeReply ?? true
 
         if (!fs.existsSync(config.statePath)) {
             fs.mkdirSync(config.statePath)

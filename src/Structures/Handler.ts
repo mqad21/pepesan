@@ -363,7 +363,13 @@ export class Handler {
     }
 
     async run() {
+        if (global.CONFIG?.readBeforeReply) {
+            await this.readMessage()
+        }
         await this.callback()
     }
 
+    private async readMessage() {
+        await this.socket?.readMessages([this._messageInfo!.key])
+    }
 }
