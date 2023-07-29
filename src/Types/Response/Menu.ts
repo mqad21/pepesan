@@ -10,10 +10,12 @@ export class Menu extends MessageResponse {
     header?: string
     footer?: string
     databaseMenu?: { [key: number]: string }
+    menus: MenuObject[]
 
-    constructor(text: string, template?: string, footer?: string) {
+    constructor(menus: MenuObject[], text: string, template?: string, footer?: string) {
         super()
         const { menuHeader, menuTemplate } = global.CONFIG
+        this.menus = menus ?? []
         this.header = menuHeader
         this.text = text
         this.template = template ?? menuTemplate ?? "{number}. {menu}"
@@ -29,7 +31,24 @@ export class Menu extends MessageResponse {
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return
+        return { text: this.formattedMenus }
+    }
+
+    get formattedMenus() {
+        const menus = this.menus.map(menu => {
+            return formatString(this.template, { number: menu.code, menu: menu.text })
+        })
+        let formattedMenus = menus.join("\n")
+        if (this.header) {
+            formattedMenus = this.header + "\n\n" + formattedMenus
+        }
+        if (this.text) {
+            formattedMenus = this.text + "\n\n" + formattedMenus
+        }
+        if (this.footer) {
+            formattedMenus = formattedMenus + "\n\n" + this.footer
+        }
+        return formattedMenus
     }
 
     async saveToDatabase(jid: string | null) {
@@ -41,65 +60,25 @@ export class Menu extends MessageResponse {
 }
 
 export class ArrayOfStringMenu extends Menu {
-    menus: { [key: number]: string }
 
     constructor(menus: string[], text: string, template?: string, footer?: string) {
-        super(text, template, footer)
-        this.menus = Object.fromEntries(menus.map((menu: string, index: number) => [index + 1, menu]))
-        this.databaseMenu = this.menus
-    }
-
-    get formattedMenus() {
-        const menus = Object.entries(this.menus).map(([key, value]: [string, string]) => {
-            return formatString(this.template, { number: key, menu: value })
+        const menuObjects = menus.map((menu, index) => {
+            return { text: menu, value: menu, code: (index + 1).toString() } as MenuObject
         })
-        let formattedMenus = menus.join("\n")
-        if (this.header) {
-            formattedMenus = this.header + "\n\n" + formattedMenus
-        }
-        if (this.text) {
-            formattedMenus = this.text + "\n\n" + formattedMenus
-        }
-        if (this.footer) {
-            formattedMenus = formattedMenus + "\n\n" + this.footer
-        }
-        return formattedMenus
-    }
-
-    getMessageContent(): AnyMessageContent | undefined {
-        return { text: this.formattedMenus }
+        super(menuObjects, text, template, footer)
+        this.databaseMenu = Object.fromEntries(menus.map((menu: string, index: number) => [index + 1, menu]))
     }
 
 }
 
 export class ArrayOfObjectMenu extends Menu {
-    menus: { [key: number]: MenuObject }
 
     constructor(menus: MenuObject[], text: string, template?: string, footer?: string) {
-        super(text, template, footer)
-        this.menus = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, menu]))
-        this.databaseMenu = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, menu.value]))
-    }
-
-    get formattedMenus() {
-        const menus = Object.entries(this.menus).map(([key, value]: [string, MenuObject]) => {
-            return formatString(this.template, { number: key, menu: value.text })
+        const menuObjects = menus.map((menu, index) => {
+            return { text: menu.text, value: menu.value, code: menu.code ?? (index + 1).toString() } as MenuObject
         })
-        let formattedMenus = menus.join("\n")
-        if (this.header) {
-            formattedMenus = this.header + "\n\n" + formattedMenus
-        }
-        if (this.text) {
-            formattedMenus = this.text + "\n\n" + formattedMenus
-        }
-        if (this.footer) {
-            formattedMenus = formattedMenus + "\n\n" + this.footer
-        }
-        return formattedMenus
-    }
-
-    getMessageContent(): AnyMessageContent | undefined {
-        return { text: this.formattedMenus }
+        super(menuObjects, text, template, footer)
+        this.databaseMenu = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, menu.value]))
     }
 
 }

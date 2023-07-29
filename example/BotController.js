@@ -38,9 +38,9 @@ module.exports = class BotController extends Controller {
 
     showOption(request) {
         return Response.menu.fromArrayOfObject([
+            { text: "Option 3", value: "option_3" },
             { text: "Option 1", value: "option_1" },
             { text: "Option 2", value: "option_2" },
-            { text: "Option 3", value: "option_3" },
         ], "Select an option", "Type *{number}*: for *{menu}*")
     }
 
