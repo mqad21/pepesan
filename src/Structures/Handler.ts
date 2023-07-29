@@ -182,7 +182,7 @@ export class Handler {
     private async isMenuMatch(path: string, menu?: string) {
         if (!menu) return false
         const menus = await this._menuObject?.get()
-        const selectedMenu = menus[menu]
+        const selectedMenu = menus[menu.toLowerCase()]
         if (!selectedMenu) return false
         return isTextMatch(selectedMenu, path)
     }
@@ -253,7 +253,7 @@ export class Handler {
         return returnValue
     }
 
-    getMessageContent(returnValue: any): AnyMessageContent[] {
+    getMessageContent(returnValue: any, targetJid?: string): AnyMessageContent[] {
         const type = getObjectType(returnValue, 2)
 
         const messageContents: AnyMessageContent[] = []
@@ -271,7 +271,7 @@ export class Handler {
         }
 
         if (returnValue instanceof ResponseMenu) {
-            returnValue.saveToDatabase(this.jid)
+            returnValue.saveToDatabase(targetJid ?? this.jid)
         }
 
         return messageContents
@@ -363,7 +363,13 @@ export class Handler {
     }
 
     async run() {
+        if (global.CONFIG?.readBeforeReply) {
+            await this.readMessage()
+        }
         await this.callback()
     }
 
+    private async readMessage() {
+        await this.socket?.readMessages([this._messageInfo!.key])
+    }
 }
