@@ -65,8 +65,9 @@ export class Controller {
     }
 
     protected async setRequest(request: Request) {
-        await this.handler.setMessageInfo(request.message!)
+        await this.setState(request.state!)
         this.handler.request.state = request.state
+        await this.handler.setMessageInfo(request.message!)
     }
 
     protected async simulateCallback(request: Request) {

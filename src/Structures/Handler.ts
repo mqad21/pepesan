@@ -169,7 +169,7 @@ export class Handler {
     }
 
     private async isStateMatch(path: string) {
-        return isTextMatch(this._state!, path)
+        return isTextMatch(this.request.state!, path)
     }
 
     private async isButtonMatch(path: string, button?: ButtonObject) {
@@ -213,7 +213,7 @@ export class Handler {
         let text, returnValue
         switch (matchRoute.type) {
             case 'state':
-                text = this._state
+                text = this.request.state
                 break
             case 'button':
                 text = this.button.value
