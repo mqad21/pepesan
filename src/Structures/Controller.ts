@@ -70,7 +70,7 @@ export class Controller {
     }
 
     protected async simulateCallback(request: Request) {
-        this.setRequest(request)
+        await this.setRequest(request)
         await this.handler.run()
     }
 
