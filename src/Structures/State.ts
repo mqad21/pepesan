@@ -1,4 +1,4 @@
-import { readFileSync, write, writeFileSync } from "fs"
+import { readFileSync, writeFileSync } from "fs"
 import { State as StateModel } from "../Database"
 
 export class State {

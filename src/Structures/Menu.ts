@@ -16,8 +16,10 @@ export class Menu {
     }
 
     async setMenu(menu: any) {
-        const defaultMenu = await this.get()
-        menu = { ...defaultMenu, ...menu }
+        if (global.CONFIG?.reusableMenu) {
+            const defaultMenu = await this.get()
+            menu = { ...defaultMenu, ...menu }
+        }
         await MenuModel.update({ menu: JSON.stringify(menu) }, {
             where: {
                 jid: this.jid

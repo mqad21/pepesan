@@ -23,6 +23,7 @@ export type Config = {
     statePath?: string,
     statePrefixLength?: number,
     readBeforeReply?: boolean,
+    reusableMenu?: boolean,
 }
 
 export type DbConfig = {
