@@ -1,7 +1,7 @@
 import { WASocket, proto } from "@adiwajshing/baileys"
 import { Router } from "../Structures"
 import { State } from "../Structures/State"
-import { Audio, Button, Image, List, Menu, Sticker, Text, Video } from "./Response"
+import { Audio, Button, Image, List, MenuResponse, Sticker, Text, Video } from "./Response"
 import { Route } from "./Routes"
 
 export class Response {
@@ -35,7 +35,7 @@ export class Response {
     }
 
     static get menu() {
-        return Menu
+        return MenuResponse
     }
 
 }
