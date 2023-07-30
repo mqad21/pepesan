@@ -35,7 +35,7 @@ export class Response {
     }
 
     static get menu() {
-        return MenuResponse
+        return MenuResponse.Menu
     }
 
 }
