@@ -10,6 +10,8 @@ router.menu("menu {menu}", [BotController, 'selectMenu'])
 
 router.keyword("Option", [BotController, 'showOption'])
 
+router.keyword("callback", [BotController, 'testCallback'])
+
 router.menu("option_{option}", [BotController, 'selectOption'])
 
 router.keyword("My name is {firstName} {lastName}", [BotController, 'introduction'])

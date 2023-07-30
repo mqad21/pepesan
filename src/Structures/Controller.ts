@@ -1,5 +1,5 @@
 import { WAMessage } from "@adiwajshing/baileys"
-import { MessageResponse } from "../Types"
+import { MessageResponse, Request } from "../Types"
 import { parseJid } from "../Utils"
 import { Handler } from "./Handler"
 
@@ -62,6 +62,15 @@ export class Controller {
 
     protected async getResponseFromRequest() {
         return await this.handler.getResponseFromRequest()
+    }
+
+    protected async setRequest(request: Request) {
+        await this.handler.setMessageInfo(request.message!)
+    }
+
+    protected async simulateCallback(request: Request) {
+        this.setRequest(request)
+        await this.handler.run()
     }
 
 }

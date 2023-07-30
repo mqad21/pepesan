@@ -111,7 +111,10 @@ export class Handler {
     }
 
     async setMessageInfo(messageInfo: proto.IWebMessageInfo) {
-        this._messageInfo = messageInfo
+        this._messageInfo = {
+            ...this._messageInfo,
+            ...messageInfo,
+        }
         await this.initState()
         await this.initMenu()
         return this
