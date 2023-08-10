@@ -1,4 +1,4 @@
-import { proto } from "@adiwajshing/baileys"
+import { proto } from "@whiskeysockets/baileys"
 import Pepesan, { Handler, MessageResponse } from "../dist"
 import router from "../example/router"
 import { MessageInfoTest } from "./types"

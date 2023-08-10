@@ -1,11 +1,11 @@
-import makeWASocket, { AuthenticationState, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@adiwajshing/baileys"
+import makeWASocket, { AnyMessageContent, AuthenticationState, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
 import { Boom } from "@hapi/boom"
 import fs from 'fs'
 import path from 'path'
 import { Handler, Router } from "."
 import { Database } from "../Database"
 import { Model } from "../Structures"
-import { Config, DbConfig } from "../Types"
+import { Config, DbConfig, ExternalRequest, Response } from "../Types"
 import { parseJid } from "../Utils"
 
 export default class Pepesan {
@@ -91,12 +91,13 @@ export default class Pepesan {
 
     async disconnect(deleteSession: boolean = false): Promise<void> {
         try {
-            await this.sock?.ws?.terminate()
-        } catch (e) {
-            console.error(e)
-        } finally {
+            this.sock?.ws?.close()
             if (deleteSession) {
-                this.sock?.logout()
+                try {
+                    await this.sock?.logout()
+                } catch (e) {
+                    console.error(e)
+                }
                 fs.readdir(this.sessionPath, (e, files) => {
                     if (e) {
                         console.error(e)
@@ -109,6 +110,28 @@ export default class Pepesan {
                     }
                 })
             }
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async execute(request: ExternalRequest): Promise<AnyMessageContent[] | undefined> {
+        try {
+            this.handler = new Handler(this.id, { router: this.router, socket: this.sock })
+            const messageInfo = {
+                key: {
+                    fromMe: false,
+                    remoteJid: request.jid
+                },
+                message: {
+                    conversation: request.text
+                }
+            }
+            await this.handler.setMessageInfo(messageInfo)
+            return this.handler.getMessageContents()
+        } catch (e) {
+            console.error(e)
+            return
         }
     }
 

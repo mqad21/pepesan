@@ -1,7 +1,7 @@
-import { WASocket, proto } from "@adiwajshing/baileys"
+import { WASocket, proto } from "@whiskeysockets/baileys"
 import { Router } from "../Structures"
 import { State } from "../Structures/State"
-import { Audio, Button, Image, List, MenuResponse, Sticker, Text, Video } from "./Response"
+import { Audio, Button, Document, Image, List, MenuResponse, Sticker, Text, Video } from "./Response"
 import { Route } from "./Routes"
 
 export class Response {
@@ -38,6 +38,10 @@ export class Response {
         return MenuResponse.Menu
     }
 
+    static get document() {
+        return Document
+    }
+
 }
 
 export type Request = {
@@ -69,7 +73,7 @@ export type RequestType = 'image' | 'video' | 'document' | 'sticker' | 'audio'
 
 export type MessageHandler = {
     router: Router,
-    socket?: WASocket 
+    socket?: WASocket
 }
 
 export type ButtonObject = { text: string, value: string }
@@ -77,3 +81,8 @@ export type ButtonObject = { text: string, value: string }
 export type ListObject = { text: string, value: string, description: string }
 
 export type MenuObject = { text: string, value: string, code?: string }
+
+export type ExternalRequest = {
+    jid: string,
+    text: string
+}

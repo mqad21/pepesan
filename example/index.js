@@ -15,8 +15,12 @@ const router = require("./router");
         stateType: 'file',
         statePath: './example/state',
     }
-    
+
     const pepesan = Pepesan.init(router, config)
     await pepesan.connect()
+
+    // Get response from external request
+    const response = await pepesan.execute({ jid: "6281260763660@s.whatsapp.net", text: "Login" })
+    console.log("response", response)
 
 })()

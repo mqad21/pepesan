@@ -1,4 +1,4 @@
-import { WASocket } from '@adiwajshing/baileys'
+import { WASocket } from '@whiskeysockets/baileys'
 import { Database } from '../Database'
 
 declare global {

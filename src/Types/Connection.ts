@@ -1,4 +1,4 @@
-import { ConnectionState, WAMessage } from "@adiwajshing/baileys"
+import { ConnectionState, WAMessage } from "@whiskeysockets/baileys"
 import { Model } from "../Structures"
 import { Dialect } from "sequelize"
 

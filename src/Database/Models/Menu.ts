@@ -13,7 +13,7 @@ export class Menu extends Model {
             allowNull: false
         },
         menu: {
-            type: DataTypes.STRING,
+            type: DataTypes.TEXT,
             allowNull: true
         }
     }

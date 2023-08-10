@@ -1,4 +1,4 @@
-import { isJidGroup, isJidUser, proto } from '@adiwajshing/baileys'
+import { isJidGroup, isJidUser, proto } from '@whiskeysockets/baileys'
 import axios from 'axios'
 import StringExtractor from './StringExtractor'
 

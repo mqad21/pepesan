@@ -1,4 +1,4 @@
-import { AnyMessageContent } from "@adiwajshing/baileys"
+import { AnyMessageContent } from "@whiskeysockets/baileys"
 import { MessageResponse, Response } from "../dist"
 import { getMessageContents } from "./utils"
 

@@ -1,4 +1,4 @@
-import { AnyMessageContent } from "@adiwajshing/baileys"
+import { AnyMessageContent } from "@whiskeysockets/baileys"
 import { MessageResponse } from "."
 import { Menu as MenuState } from "../../Structures/Menu"
 import { MenuObject } from "../Chat"

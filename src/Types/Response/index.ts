@@ -1,4 +1,4 @@
-import { AnyMessageContent } from "@adiwajshing/baileys"
+import { AnyMessageContent } from "@whiskeysockets/baileys"
 
 export abstract class MessageResponse {
 
@@ -13,4 +13,5 @@ export * from "./Audio"
 export * from "./Video"
 export * from "./List"
 export * from "./Button"
+export * from "./Document"
 export * as MenuResponse from "./Menu"
