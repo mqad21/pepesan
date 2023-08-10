@@ -11,22 +11,22 @@ export class Controller {
         this.handler = handler
     }
 
-    protected async reply(response: MessageResponse | MessageResponse[] | string | string[] | any[]) {
+    protected async reply(response: MessageResponse | MessageResponse[] | string | string[] | any[], withQuoted: boolean = false) {
         const messages: (WAMessage | undefined)[] = []
         const contents = this.handler.getMessageContent(response)
         for (const content of contents) {
-            const message = await this.handler.reply(content)
+            const message = await this.handler.reply(content, withQuoted)
             messages.push(message)
         }
         return messages
     }
 
-    protected async send(number: string, response: MessageResponse | MessageResponse[] | string | string[] | any[]) {
+    protected async send(number: string, response: MessageResponse | MessageResponse[] | string | string[] | any[], withQuoted: boolean = false) {
         const messages: (WAMessage | undefined)[] = []
         const jid = parseJid(number)
         const contents = this.handler.getMessageContent(response, jid)
         for (const content of contents) {
-            const message = await this.handler.send(jid, content)
+            const message = await this.handler.send(jid, content, withQuoted)
             messages.push(message)
         }
         return messages

@@ -187,11 +187,16 @@ export class Handler {
         return isTextMatch(selectedMenu, path)
     }
 
+    async getMessageContents() {
+        const returnValue = await this.getReturnValue()
+        const messageContents = this.getMessageContent(returnValue)
+        return messageContents
+    }
+
     private async callback() {
         try {
             // console.time('callback')
-            const returnValue = await this.getReturnValue()
-            const messageContents = this.getMessageContent(returnValue)
+            const messageContents = await this.getMessageContents()
             for (const content of messageContents) {
                 await this.reply(content)
             }
@@ -316,12 +321,15 @@ export class Handler {
         return
     }
 
-    async reply(message?: AnyMessageContent) {
-        return await this.send(this.jid, message)
+    async reply(message?: AnyMessageContent, withQuoted: boolean = false) {
+        return await this.send(this.jid, message, withQuoted)
     }
 
-    async send(jid: string | null, message?: AnyMessageContent) {
-        if (jid && message) return await this.socket?.sendMessage(jid, message)
+    async send(jid: string | null, message?: AnyMessageContent, withQuoted: boolean = false) {
+        const options = {
+            quoted: withQuoted ? await this.getQuotedFromRequest() : undefined
+        }
+        if (jid && message) return await this.socket?.sendMessage(jid, message, options)
         return
     }
 
@@ -360,6 +368,13 @@ export class Handler {
             }
         }
         return Response.text.fromString(this.request.text!)
+    }
+
+    async getQuotedFromRequest(): Promise<WAMessage | undefined> {
+        return {
+            key: this._messageInfo?.key!,
+            ...this._messageInfo?.message?.extendedTextMessage?.contextInfo?.quotedMessage,
+        }
     }
 
     async run() {

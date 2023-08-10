@@ -58,4 +58,9 @@ module.exports = class BotController extends Controller {
         return Response.text.fromString("You are logged out")
     }
 
+    async echo(request, number) {
+        const response = await this.getResponseFromRequest()
+        await this.send(number, response, true)
+    }
+
 }

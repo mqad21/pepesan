@@ -69,7 +69,7 @@ export type RequestType = 'image' | 'video' | 'document' | 'sticker' | 'audio'
 
 export type MessageHandler = {
     router: Router,
-    socket?: WASocket 
+    socket?: WASocket
 }
 
 export type ButtonObject = { text: string, value: string }
@@ -77,3 +77,8 @@ export type ButtonObject = { text: string, value: string }
 export type ListObject = { text: string, value: string, description: string }
 
 export type MenuObject = { text: string, value: string, code?: string }
+
+export type ExternalRequest = {
+    jid: string,
+    text: string
+}

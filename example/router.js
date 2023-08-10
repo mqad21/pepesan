@@ -12,6 +12,8 @@ router.keyword("Option", [BotController, 'showOption'])
 
 router.menu("option_{option}", [BotController, 'selectOption'])
 
+router.keyword("echo {number}", [BotController, 'echo'])
+
 router.keyword("My name is {firstName} {lastName}", [BotController, 'introduction'])
 
 router.keyword("Ping {times} times", [BotController, 'pingManyTimes'])
