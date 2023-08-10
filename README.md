@@ -17,7 +17,7 @@
 <br/>
 
 #### **Thanks To** ####
-- [@adiwajshing](https://github.com/adiwajshing/) for the awesome WhatsApp socket library [Baileys](https://github.com/adiwajshing/Baileys) 
+- [@whiskeysockets](https://github.com/wishkeysockets/) for the awesome WhatsApp socket library [Baileys](https://github.com/whiskeysockets/Baileys) 
 
 <br/>
 
