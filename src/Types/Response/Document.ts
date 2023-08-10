@@ -4,18 +4,20 @@ import { MessageResponse } from "."
 export class Document extends MessageResponse {
 
     mimetype: string
+    fileName: string
 
-    constructor(mimetype?: string) {
+    constructor(mimetype?: string, fileName?: string) {
         super()
         this.mimetype = mimetype ?? ''
+        this.fileName = fileName ?? 'document'
     }
 
-    static fromURL(url: string, mimetype?: string) {
-        return new URLDocument(url, mimetype)
+    static fromURL(url: string, mimetype?: string, fileName?: string) {
+        return new URLDocument(url, mimetype, fileName)
     }
 
-    static fromBuffer(buffer: Buffer, mimetype?: string) {
-        return new BufferDocument(buffer, mimetype)
+    static fromBuffer(buffer: Buffer, mimetype?: string, fileName?: string) {
+        return new BufferDocument(buffer, mimetype, fileName)
     }
 
     getMessageContent(): AnyMessageContent | undefined {
@@ -27,8 +29,8 @@ export class Document extends MessageResponse {
 export class URLDocument extends Document {
     url: string
 
-    constructor(url: string, mimetype?: string) {
-        super(mimetype)
+    constructor(url: string, mimetype?: string, fileName?: string) {
+        super(mimetype, fileName)
         this.url = url
     }
 
@@ -41,13 +43,13 @@ export class URLDocument extends Document {
 export class BufferDocument extends Document {
     buffer: Buffer
 
-    constructor(buffer: Buffer, mimetype?: string) {
-        super(mimetype)
+    constructor(buffer: Buffer, mimetype?: string, fileName?: string) {
+        super(mimetype, fileName)
         this.buffer = buffer
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return { document: this.buffer, mimetype: this.mimetype }
+        return { document: this.buffer, mimetype: this.mimetype, fileName: this.fileName }
     }
 
 }
