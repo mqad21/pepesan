@@ -91,7 +91,7 @@ export const isTextMatch = (text?: string, comparison?: string) => {
         return true
     }
 
-    return comparison.toLowerCase() === text.toLowerCase()
+    return comparison.toString().toLowerCase() === text.toString().toLowerCase()
 }
 
 export const getValidRegex = (text: string) => {
