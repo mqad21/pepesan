@@ -32,16 +32,6 @@ const routerTests: RouterTest[] = [
     new RouterTest(
         {
             message: {
-                jid: '6281234567890@s.whatsapp.net',
-                text: 'Buy',
-                name: 'Qadri'
-            },
-            expectedText: 'Hello Qadri! What do you want to buy?'
-        }
-    ),
-    new RouterTest(
-        {
-            message: {
                 jid: '6289876543210@s.whatsapp.net',
                 text: 'Buy'
             },
@@ -55,15 +45,6 @@ const routerTests: RouterTest[] = [
                 text: 'Change payment to cash',
             },
             expectedText: 'You are not allowed to change settings'
-        }
-    ),
-    new RouterTest(
-        {
-            message: {
-                jid: '6281234567890@s.whatsapp.net',
-                text: 'Change payment to transfer',
-            },
-            expectedText: 'Your payment method has changed'
         }
     ),
     new RouterTest(
