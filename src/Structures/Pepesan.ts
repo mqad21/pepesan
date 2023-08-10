@@ -91,12 +91,9 @@ export default class Pepesan {
 
     async disconnect(deleteSession: boolean = false): Promise<void> {
         try {
-            await this.sock?.ws?.terminate()
-        } catch (e) {
-            console.error(e)
-        } finally {
+            this.sock?.ws?.terminate()
             if (deleteSession) {
-                this.sock?.logout()
+                await this.sock?.logout()
                 fs.readdir(this.sessionPath, (e, files) => {
                     if (e) {
                         console.error(e)
@@ -109,6 +106,8 @@ export default class Pepesan {
                     }
                 })
             }
+        } catch (e) {
+            console.error(e)
         }
     }
 
