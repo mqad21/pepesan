@@ -93,7 +93,11 @@ export default class Pepesan {
         try {
             this.sock?.ws?.terminate()
             if (deleteSession) {
-                await this.sock?.logout()
+                try {
+                    await this.sock?.logout()
+                } catch (e) {
+                    console.error(e)
+                }
                 fs.readdir(this.sessionPath, (e, files) => {
                     if (e) {
                         console.error(e)
