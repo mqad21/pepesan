@@ -6,7 +6,7 @@ import { formatString } from "../../Utils"
 
 export class Menu extends MessageResponse {
     text: string
-    template: string
+    template: string | ((menu: MenuObject) => string)
     header?: string
     footer?: string
     databaseMenu?: { [key: number]: string }
@@ -36,6 +36,7 @@ export class Menu extends MessageResponse {
 
     get formattedMenus() {
         const menus = this.menus.map(menu => {
+            if (typeof this.template === "function") return this.template(menu)
             return formatString(this.template, { number: menu.code, menu: menu.text })
         })
         let formattedMenus = menus.join("\n")
