@@ -1,4 +1,4 @@
-import { WAMessage } from "@whiskeysockets/baileys"
+import { AnyMessageContent, WAMessage } from "@whiskeysockets/baileys"
 import { MessageResponse, Request } from "../Types"
 import { parseJid } from "../Utils"
 import { Handler } from "./Handler"
@@ -73,6 +73,11 @@ export class Controller {
     protected async simulateCallback(request: Request) {
         await this.setRequest(request)
         await this.handler.run()
+    }
+
+    protected async simulateResponses(request: Request): Promise<AnyMessageContent[]> {
+        await this.setRequest(request)
+        return await this.handler.getMessageContents()
     }
 
 }
