@@ -151,3 +151,7 @@ export const formatString = (text: string, params: any) => {
         return params[match]
     })
 }
+
+export const isValidJid = (jid: string) => {
+    return jid.includes('@s.whatsapp.net')
+}

@@ -6,7 +6,7 @@ import { Handler, Router } from "."
 import { Database } from "../Database"
 import { Model } from "../Structures"
 import { Config, DbConfig, ExternalRequest, Response } from "../Types"
-import { parseJid } from "../Utils"
+import { isValidJid, parseJid } from "../Utils"
 
 export default class Pepesan {
     id: string
@@ -118,6 +118,9 @@ export default class Pepesan {
     async execute(request: ExternalRequest): Promise<AnyMessageContent[] | undefined> {
         try {
             this.handler = new Handler(this.id, { router: this.router, socket: this.sock })
+            if (!isValidJid(request.jid)) {
+                this.handler.reply = async () => { return undefined }
+            }
             const messageInfo = {
                 key: {
                     fromMe: false,
