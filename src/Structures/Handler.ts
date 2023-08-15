@@ -210,7 +210,7 @@ export class Handler {
         }
     }
 
-    private async getReturnValue(): Promise<Response | void | string> {
+    async getReturnValue(): Promise<Response | void | string | Response[]> {
         const matchRoute = await this.getMatchRoute()
 
         if (!matchRoute) return
@@ -247,7 +247,7 @@ export class Handler {
 
             requestParams = callbackParams.map((param: string) => requestParams[param]) ?? []
 
-            returnValue = await (controller[method as keyof Controller] as Callback)(this.request, ...requestParams)
+            returnValue = (controller[method as keyof Controller] as Callback)(this.request, ...requestParams)
         } else {
             const callback = matchRoute?.callback as Callback
             const callbackParams = getParamsName(callback)
@@ -255,7 +255,7 @@ export class Handler {
 
             requestParams = callbackParams.map((param: string) => requestParams[param]) ?? []
 
-            returnValue = await matchRoute?.callback!(this.request)
+            returnValue = matchRoute?.callback!(this.request)
         }
 
         return returnValue

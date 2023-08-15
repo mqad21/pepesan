@@ -1,5 +1,5 @@
 import { AnyMessageContent, WAMessage } from "@whiskeysockets/baileys"
-import { MessageResponse, Request } from "../Types"
+import { MessageResponse, Request, Response } from "../Types"
 import { parseJid } from "../Utils"
 import { Handler } from "./Handler"
 
@@ -75,9 +75,9 @@ export class Controller {
         await this.handler.run()
     }
 
-    protected async simulateResponses(request: Request): Promise<AnyMessageContent[]> {
+    protected async simulateResponses(request: Request): Promise<Response | void | string | Response[]> {
         await this.setRequest(request)
-        return await this.handler.getMessageContents()
+        return await this.handler.getReturnValue()
     }
 
 }
