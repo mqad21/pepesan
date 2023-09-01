@@ -58,6 +58,7 @@ export default class Pepesan {
         config.statePath = config.statePath ?? './state'
         config.statePrefixLength = config.statePrefixLength ?? 9
         config.readBeforeReply = config.readBeforeReply ?? true
+        config.typingBeforeReply = config.typingBeforeReply ?? false
         config.reusableMenu = config.reusableMenu ?? true
 
         if (!fs.existsSync(config.statePath)) {

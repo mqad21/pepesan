@@ -384,10 +384,18 @@ export class Handler {
         if (global.CONFIG?.readBeforeReply) {
             await this.readMessage()
         }
+        if (global.CONFIG?.typingBeforeReply) {
+            await this.typing()
+        }
         await this.callback()
     }
 
     private async readMessage() {
         await this.socket?.readMessages([this._messageInfo!.key])
     }
+
+    private async typing() {
+        await this.socket?.sendPresenceUpdate("composing", this.jid!)
+    }
+
 }

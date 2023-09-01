@@ -23,6 +23,7 @@ export type Config = {
     statePath?: string,
     statePrefixLength?: number,
     readBeforeReply?: boolean,
+    typingBeforeReply?: boolean,
     reusableMenu?: boolean,
 }
 
