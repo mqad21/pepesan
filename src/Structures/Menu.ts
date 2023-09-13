@@ -13,7 +13,7 @@ export class Menu {
         const [menuModel] = await MenuModel.findOrCreate({
             where: { jid: this.jid }, defaults: { jid: this.jid, menu: "" },
         })
-        return JSON.parse(menuModel.menu ? menuModel.menu : "{}") as { [key: number]: MenuObject | string }
+        return JSON.parse(menuModel.menu ? menuModel.menu : "{}") as { [key: string]: MenuObject }
     }
 
     async setMenu(menu: any) {

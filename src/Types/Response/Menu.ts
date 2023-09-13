@@ -70,7 +70,8 @@ export class ArrayOfStringMenu extends Menu {
         this.databaseMenu = Object.fromEntries(menus.map((menu: string, index: number) => [index + 1, {
             text: menu,
             value: menu,
-            code: (index + 1).toString()
+            code: (index + 1).toString(),
+            order: index
         }]))
     }
 
@@ -86,7 +87,8 @@ export class ArrayOfObjectMenu extends Menu {
         this.databaseMenu = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, {
             text: menu.text,
             value: menu.value,
-            code: menu.code ?? (index + 1).toString()
+            code: menu.code ?? (index + 1).toString(),
+            order: index
         }]))
     }
 

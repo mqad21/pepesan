@@ -17,7 +17,7 @@ export class Handler {
     private _menuObject?: Menu
     private _matchRoute?: Route
     private _state?: string | null
-    private _menus?: any[] | null
+    private _menus?: { [key: string]: MenuObject }
 
     constructor(clientId: string, messageHandler: MessageHandler) {
         this.clientId = clientId
@@ -186,7 +186,7 @@ export class Handler {
         if (!menu) return false
         const menus = await this._menuObject?.get()
         if (!menus) return false
-        const selectedMenu = menus[menu.toLowerCase()] as MenuObject
+        const selectedMenu = menus[menu.toLowerCase()]
         if (!selectedMenu) return false
         return isTextMatch(selectedMenu.value, path)
     }
@@ -229,7 +229,7 @@ export class Handler {
                 break
             case 'menu':
                 if (this.menu) {
-                    text = this._menus?.[this.menu]
+                    text = this._menus?.[this.menu].value
                 }
                 break
             default:

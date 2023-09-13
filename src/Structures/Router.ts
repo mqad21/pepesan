@@ -42,7 +42,7 @@ export class Router {
             if (!menu) return false
             const menuObject = new Menu(request.jid!)
             const menus = await menuObject.get()
-            if (menus.includes(path)) {
+            if (menus[path]) {
                 return true
             }
             return false
