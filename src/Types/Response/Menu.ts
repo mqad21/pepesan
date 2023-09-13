@@ -9,7 +9,7 @@ export class Menu extends MessageResponse {
     template: string | ((menu: MenuObject) => string)
     header?: string
     footer?: string
-    databaseMenu?: { [key: number]: MenuObject | string }
+    databaseMenu?: { [key: number]: MenuObject }
     menus: MenuObject[]
 
     constructor(menus: MenuObject[], text: string, template?: string, footer?: string) {

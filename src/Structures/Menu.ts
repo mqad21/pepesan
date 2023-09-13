@@ -1,4 +1,5 @@
 import { Menu as MenuModel } from "../Database"
+import { MenuObject } from "../Types"
 
 export class Menu {
 
@@ -12,7 +13,7 @@ export class Menu {
         const [menuModel] = await MenuModel.findOrCreate({
             where: { jid: this.jid }, defaults: { jid: this.jid, menu: "" },
         })
-        return JSON.parse(menuModel.menu ? menuModel.menu : "{}")
+        return JSON.parse(menuModel.menu ? menuModel.menu : "{}") as { [key: number]: MenuObject | string }
     }
 
     async setMenu(menu: any) {

@@ -1,5 +1,5 @@
 import { AnyMessageContent, DownloadableMessage, downloadContentFromMessage, downloadMediaMessage, getContentType, GroupParticipant, MessageType, proto, WAMessage, WASocket } from "@whiskeysockets/baileys"
-import { ButtonObject, Callback, ListObject, MessageHandler, MessageResponse, Request, RequestType, Response, Route } from "../Types"
+import { ButtonObject, Callback, ListObject, MenuObject, MessageHandler, MessageResponse, Request, RequestType, Response, Route } from "../Types"
 import { filterAsync, findAsyncSequential, getObjectType, getParamsName, getTextFromMessage, isTextMatch } from "../Utils"
 import StringExtractor from "../Utils/StringExtractor"
 import { Controller } from "./Controller"
@@ -185,9 +185,10 @@ export class Handler {
     private async isMenuMatch(path: string, menu?: string) {
         if (!menu) return false
         const menus = await this._menuObject?.get()
-        const selectedMenu = menus[menu.toLowerCase()]
+        if (!menus) return false
+        const selectedMenu = menus[menu.toLowerCase()] as MenuObject
         if (!selectedMenu) return false
-        return isTextMatch(selectedMenu, path)
+        return isTextMatch(selectedMenu.value, path)
     }
 
     async getMessageContents() {
