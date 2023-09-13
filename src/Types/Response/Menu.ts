@@ -9,7 +9,7 @@ export class Menu extends MessageResponse {
     template: string | ((menu: MenuObject) => string)
     header?: string
     footer?: string
-    databaseMenu?: { [key: number]: string }
+    databaseMenu?: { [key: number]: MenuObject | string }
     menus: MenuObject[]
 
     constructor(menus: MenuObject[], text: string, template?: string, footer?: string) {
@@ -67,7 +67,11 @@ export class ArrayOfStringMenu extends Menu {
             return { text: menu, value: menu, code: (index + 1).toString() } as MenuObject
         })
         super(menuObjects, text, template, footer)
-        this.databaseMenu = Object.fromEntries(menus.map((menu: string, index: number) => [index + 1, menu]))
+        this.databaseMenu = Object.fromEntries(menus.map((menu: string, index: number) => [index + 1, {
+            text: menu,
+            value: menu,
+            code: (index + 1).toString()
+        }]))
     }
 
 }
@@ -79,7 +83,11 @@ export class ArrayOfObjectMenu extends Menu {
             return { text: menu.text, value: menu.value, code: menu.code ?? (index + 1).toString() } as MenuObject
         })
         super(menuObjects, text, template, footer)
-        this.databaseMenu = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, menu.value]))
+        this.databaseMenu = Object.fromEntries(menus.map((menu: MenuObject, index: number) => [menu.code ?? index + 1, {
+            text: menu.text,
+            value: menu.value,
+            code: menu.code ?? (index + 1).toString()
+        }]))
     }
 
 }
