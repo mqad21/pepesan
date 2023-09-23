@@ -1,12 +1,15 @@
-import makeWASocket, { AnyMessageContent, AuthenticationState, ConnectionState, DisconnectReason, fetchLatestBaileysVersion, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
 import { Boom } from "@hapi/boom"
+import makeWASocket, { AnyMessageContent, AuthenticationState, ConnectionState, DisconnectReason, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
 import fs from 'fs'
 import path from 'path'
 import { Handler, Router } from "."
 import { Database } from "../Database"
 import { Model } from "../Structures"
-import { Config, DbConfig, ExternalRequest, Response } from "../Types"
+import { Config, ConnectionEvent, DbConfig, ExternalRequest, ServerConfig } from "../Types"
 import { isValidJid, parseJid } from "../Utils"
+import Server from "./Server"
+
+const connectionAttempts = new Map<string, number>()
 
 export default class Pepesan {
     id: string
@@ -17,23 +20,28 @@ export default class Pepesan {
     isEventRegistered: boolean
     allowedJids?: string[]
     blockedJids?: string[]
-    onOpen?: (state: Partial<ConnectionState>) => void
-    onClose?: (state: Partial<ConnectionState>) => void
-    onReconnect?: (state: Partial<ConnectionState>) => void
-    onQR?: (state: Partial<ConnectionState>) => void
-    onMessage?: (message: WAMessage) => Promise<void>
+    onOpen?: ConnectionEvent
+    onClose?: ConnectionEvent
+    onReconnect?: ConnectionEvent
+    onQR?: ConnectionEvent
+    onMessage?: (clientId: string, message: WAMessage) => Promise<void>
     error?: string
     auth?: AuthenticationState
     saveCreds: () => Promise<void> = async () => { }
-    state?: Partial<ConnectionState>
     router: Router
     handler?: Handler
-    dbConfig?: DbConfig
+    dbConfig: DbConfig
     models?: typeof Model[]
-    sock?: WASocket
+    socks: Map<string, WASocket>
+    clientIds: Set<string>
+    connectionStates: Map<string, Partial<ConnectionState>> = new Map()
+    serverConfig: ServerConfig
+    maxRetries: number
 
     constructor(router: Router, config: Config = {}) {
         this.id = config.id ?? 'Pepesan'
+        this.clientIds = config.clientIds ?? new Set(['default'])
+        this.socks = new Map()
         this.version = config.version ?? [2, 2323, 4]
         this.sessionPath = config.sessionPath ?? './session'
         this.browserName = config.browserName ?? 'Pepesan'
@@ -41,17 +49,26 @@ export default class Pepesan {
         this.blockedJids = config.blockedNumbers?.map((number: string) => parseJid(number))
         this.printQRInTerminal = config.printQRInTerminal ?? true
         this.isEventRegistered = false
+        this.maxRetries = config.maxRetries ?? 5
         this.onOpen = config.onOpen
         this.onClose = config.onClose
         this.onReconnect = config.onReconnect
         this.onQR = config.onQR
         this.onMessage = config.onMessage
         this.router = router
+
         this.dbConfig = {
             ...config.db,
             path: config.db?.path ?? 'data.sqlite',
             timezone: config.db?.dialect === 'sqlite' ? '+00:00' : config.db?.timezone ?? '+00:00',
         }
+
+        this.serverConfig = {
+            ...config.server,
+            port: config.server?.port ?? 3000,
+            prefixPath: config.server?.prefixPath ?? '/api'
+        }
+
         this.models = config.models
 
         config.stateType = config.stateType ?? 'db'
@@ -65,25 +82,60 @@ export default class Pepesan {
             fs.mkdirSync(config.statePath)
         }
 
+        this.initDefaultClientIds()
         this.initDatabase()
+        this.initServer()
+        this.startServer()
         global.CONFIG = config
     }
 
+    initDefaultClientIds(): void {
+        fs.readdir(this.sessionPath, (e, files) => {
+            try {
+                if (e) {
+                    console.error(e)
+                }
+                for (const file of files) {
+                    const fileDir = path.join(this.sessionPath, file)
+                    if (fs.lstatSync(fileDir).isDirectory()) {
+                        this.clientIds.add(file)
+                    }
+                }
+            } catch (e: any) {
+                console.error(e)
+            }
+        })
+    }
+
     async connect(): Promise<void> {
+        for (const clientId of this.clientIds) {
+            await this.connectClient(clientId)
+        }
+    }
+
+    async connectClient(id: string = 'default'): Promise<void> {
         try {
-            // const { version } = await fetchLatestBaileysVersion()
-            const { state, saveCreds } = await useMultiFileAuthState(this.sessionPath)
+            const sessionPath = path.join(this.sessionPath, id)
+            const { state, saveCreds } = await useMultiFileAuthState(sessionPath)
             const socketOptions: UserFacingSocketConfig = {
                 printQRInTerminal: this.printQRInTerminal,
                 version: this.version,
                 auth: state,
-                browser: [this.browserName, '', '']
+                browser: [this.browserName, '', ''],
             }
             this.auth = state
-            this.saveCreds = saveCreds
-            this.sock = makeWASocket(socketOptions)
-            global.sock = this.sock
-            this.initEvents()
+            this.saveCreds = async () => {
+                try {
+                    await saveCreds()
+                } catch (e) {
+                    console.error(e)
+                }
+            }
+            const sock = makeWASocket(socketOptions)
+            this.socks.set(id, sock)
+            this.initEvents(id)
+            this.connectionStates.set(id, {})
+            console.log("✅ Client with id " + id + " connected " + "(attempt " + (connectionAttempts.get(id) ?? 0) + ")")
         } catch (e) {
             console.error(e)
         }
@@ -91,34 +143,54 @@ export default class Pepesan {
     }
 
     async disconnect(deleteSession: boolean = false): Promise<void> {
+        for (const clientId of this.clientIds) {
+            await this.disconnectClient(clientId, deleteSession)
+        }
+    }
+
+    async disconnectClient(id: string = 'default', deleteSession: boolean = false): Promise<void> {
         try {
-            this.sock?.ws?.close()
             if (deleteSession) {
                 try {
-                    await this.sock?.logout()
+                    const sessionPath = path.join(this.sessionPath, id)
+                    fs.readdir(sessionPath, (e, files) => {
+                        try {
+                            if (e) {
+                                console.error(e)
+                            }
+                            for (const file of files) {
+                                const fileDir = path.join(sessionPath, file)
+                                if (file !== '.gitignore') {
+                                    fs.unlinkSync(fileDir)
+                                }
+                            }
+                            fs.unlinkSync(sessionPath)
+                        } catch (e: any) {
+                            console.error(e)
+                        }
+                    })
                 } catch (e) {
                     console.error(e)
                 }
-                fs.readdir(this.sessionPath, (e, files) => {
-                    if (e) {
-                        console.error(e)
-                    }
-                    for (const file of files) {
-                        const fileDir = path.join(this.sessionPath, file)
-                        if (file !== '.gitignore') {
-                            fs.unlinkSync(fileDir)
-                        }
-                    }
-                })
             }
+            const sock = this.socks.get(id)
+            if (sock) {
+                await sock.logout()
+                await sock.ws.close()
+            }
+            this.socks.delete(id)
+            this.connectionStates.delete(id)
+            console.log("❌ Client with id " + id + " disconnected")
+            this.initServer()
         } catch (e) {
             console.error(e)
         }
     }
 
-    async execute(request: ExternalRequest): Promise<AnyMessageContent[] | undefined> {
+    async execute(request: ExternalRequest, clientId: string = 'default'): Promise<AnyMessageContent[] | undefined> {
         try {
-            this.handler = new Handler(this.id, { router: this.router, socket: this.sock })
+            const sock = this.socks.get(clientId)
+            this.handler = new Handler(clientId, { router: this.router, socket: sock })
             if (!isValidJid(request.jid)) {
                 this.handler.reply = async () => { return undefined }
             }
@@ -139,29 +211,38 @@ export default class Pepesan {
         }
     }
 
-    private initEvents(): void {
-        this.sock?.ev.on('creds.update', this.saveCreds)
+    private initEvents(id: string = 'default'): void {
+        const sock = this.socks.get(id)
 
-        this.sock?.ev.on('connection.update', async (connectionState: Partial<ConnectionState>) => {
+        if (!sock) return
+
+        sock.ev.on('creds.update', this.saveCreds)
+
+        sock.ev.on('connection.update', async (connectionState: Partial<ConnectionState>) => {
             try {
-                this.state = connectionState
-                if (this.state.connection === 'close') {
-                    const shouldReconnect = (this.state?.lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
+                const state = connectionState
+                this.connectionStates.set(id, state)
+                const retry = connectionAttempts.get(id) ?? 0
+                if (state.connection === 'close' && retry < this.maxRetries) {
+                    const shouldReconnect = (state?.lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
                     // reconnect if not logged out
                     if (shouldReconnect) {
-                        await this.connect()
-                        this.onReconnect?.(this.state)
+                        this.onReconnect?.(id, state)
                     } else {
-                        this.onClose?.(this.state)
-                        await this.disconnect(true)
-                        await this.connect()
+                        this.onClose?.(id, state)
+                        await this.disconnectClient(id, true)
                     }
-                } else if (this.state.connection === 'open') {
-                    this.onOpen?.(this.state)
+                    await this.connectClient(id)
+                    connectionAttempts.set(id, retry + 1)
+                } else if (state.connection === 'close' && retry >= this.maxRetries) {
+                    this.onClose?.(id, state)
+                    await this.disconnectClient(id, true)
+                } else if (state.connection === 'open') {
+                    this.onOpen?.(id, state)
                 }
 
-                if (this.state.qr) {
-                    this.onQR?.(this.state)
+                if (state.qr) {
+                    this.onQR?.(id, state)
                 }
 
             } catch (e) {
@@ -169,7 +250,7 @@ export default class Pepesan {
             }
         })
 
-        this.sock?.ev.on('messages.upsert', async ({ messages }: { messages: WAMessage[] }) => {
+        sock.ev.on('messages.upsert', async ({ messages }: { messages: WAMessage[] }) => {
             try {
                 const messageInfos = messages
                 if (messageInfos && messageInfos.length) {
@@ -177,12 +258,12 @@ export default class Pepesan {
                     if (!messageInfo.key.fromMe) {
                         const jid = messageInfo.key.remoteJid ?? ''
                         if (!jid.includes('@g.us') && !jid.includes('status@broadcast') && this.isAllowedJid(jid)) {
-                            this.handler = new Handler(this.id, { router: this.router, socket: this.sock })
+                            this.handler = new Handler(id, { router: this.router, socket: sock })
                             await this.handler.setMessageInfo(messageInfo)
                             await this.handler.run()
                         }
                     }
-                    this.onMessage?.(messageInfo)
+                    this.onMessage?.(id, messageInfo)
                 }
                 return
             } catch (e) {
@@ -194,6 +275,14 @@ export default class Pepesan {
     private initDatabase(): void {
         const db = new Database(this.dbConfig, this.models)
         global.db = db
+    }
+
+    private initServer(): Server {
+        return Server.init(this)
+    }
+
+    private startServer(): void {
+        Server.getInstance().start()
     }
 
     private isAllowedJid(jid: string): boolean {

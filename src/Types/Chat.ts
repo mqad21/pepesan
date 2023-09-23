@@ -1,45 +1,52 @@
 import { WASocket, proto } from "@whiskeysockets/baileys"
 import { Router } from "../Structures"
 import { State } from "../Structures/State"
-import { Audio, Button, Document, Image, List, MenuResponse, Sticker, Text, Video } from "./Response"
+import { Audio, Button, Document, Image, List, MenuResponse, MessageResponse, Sticker, Text, Video } from "./Response"
 import { Route } from "./Routes"
 
 export class Response {
 
+    static clientId
+
+    static getResponseClass(responseClass: any) {
+        responseClass.prototype.clientId = this.clientId
+        return responseClass
+    }
+
     static get image() {
-        return Image
+        return this.getResponseClass(Image)
     }
 
     static get text() {
-        return Text
+        return this.getResponseClass(Text)
     }
 
     static get sticker() {
-        return Sticker
+        return this.getResponseClass(Sticker)
     }
 
     static get audio() {
-        return Audio
+        return this.getResponseClass(Audio)
     }
 
     static get video() {
-        return Video
+        return this.getResponseClass(Video)
     }
 
     static get button() {
-        return Button
+        return this.getResponseClass(Button)
     }
 
     static get list() {
-        return List
+        return this.getResponseClass(List)
     }
 
     static get menu() {
-        return MenuResponse.Menu
+        return this.getResponseClass(MenuResponse.Menu)
     }
 
     static get document() {
-        return Document
+        return this.getResponseClass(Document)
     }
 
 }

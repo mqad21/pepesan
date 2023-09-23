@@ -1,6 +1,8 @@
-import { AnyMessageContent } from "@whiskeysockets/baileys"
+  import { AnyMessageContent } from "@whiskeysockets/baileys"
 
 export abstract class MessageResponse {
+
+  public clientId: string = ""
 
   abstract getMessageContent(): AnyMessageContent | undefined
 

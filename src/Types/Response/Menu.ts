@@ -54,7 +54,7 @@ export class Menu extends MessageResponse {
 
     async saveToDatabase(jid: string | null) {
         if (!jid) return
-        const menu = new MenuState(jid)
+        const menu = new MenuState(this.clientId, jid)
         await menu.setMenu(this.databaseMenu)
     }
 

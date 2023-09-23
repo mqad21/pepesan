@@ -10,6 +10,10 @@ const router = require("./router");
         db: {
             path: './example/data.sqlite',
         },
+        server: {
+            authKey: '123456',
+        },
+        maxRetries: 1,
         menuTemplate: "Ketik *{number}* -> *{menu}*",
         menuHeader: "===== Pilihan Menu =====",
         stateType: 'file',

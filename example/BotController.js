@@ -67,9 +67,13 @@ module.exports = class BotController extends Controller {
         });
     }
 
-    async login(request) {
+    async login(request, clientId) {
         await this.setState("login");
-        return Response.text.fromString("You are logged in");
+        console.log("clientId", this.clientId)
+        if (this.clientId === clientId) {
+            return Response.text.fromString("You are already logged in");
+        }
+        // return Response.text.fromString("You are logged in to client " + this.clientId);
     }
 
     async logout(request) {

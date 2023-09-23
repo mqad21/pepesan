@@ -1,14 +1,16 @@
-import { AnyMessageContent, WAMessage } from "@whiskeysockets/baileys"
+import { WAMessage } from "@whiskeysockets/baileys"
 import { MessageResponse, Request, Response } from "../Types"
 import { parseJid } from "../Utils"
 import { Handler } from "./Handler"
 
 export class Controller {
 
+    clientId: string
     private handler: Handler
 
     constructor(handler: Handler) {
         this.handler = handler
+        this.clientId = handler.clientId
     }
 
     protected async reply(response: MessageResponse | MessageResponse[] | string | string[] | any[], withQuoted: boolean = false) {

@@ -1,8 +1,9 @@
-import { readFileSync, writeFileSync } from "fs"
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs"
 import { State as StateModel } from "../Database"
 
 export class State {
 
+    clientId: string
     jid: string
     private PREFIX_LENGTH = global.CONFIG?.statePrefixLength ?? 9
     private PATH = global.CONFIG?.statePath ?? './state'
@@ -11,11 +12,16 @@ export class State {
         return this.jid.substring(0, this.PREFIX_LENGTH)
     }
 
-    get filePath() {
-        return `${this.PATH}/${this.prefix}.json`
+    get dirPath() {
+        return `${this.PATH}/${this.clientId}`
     }
 
-    constructor(jid: string) {
+    get filePath() {
+        return `${this.dirPath}/${this.prefix}.json`
+    }
+
+    constructor(clientId: string, jid: string) {
+        this.clientId = clientId
         this.jid = jid
     }
 
@@ -28,13 +34,19 @@ export class State {
 
     private async getFromDb() {
         const [stateModel] = await StateModel.findOrCreate({
-            where: { jid: this.jid }, defaults: { jid: this.jid, state: "" },
+            where: { jid: this.jid, clientId: this.clientId }, defaults: { jid: this.jid, state: "" },
         })
         return stateModel.state
     }
 
     private async getFromFile() {
         try {
+            if (!this.dirPath) return null
+
+            if (!existsSync(this.dirPath)) {
+                mkdirSync(this.dirPath)
+            }
+
             const file = readFileSync(this.filePath, { encoding: 'utf-8' })
             const data = JSON.parse(file)
             return data[this.jid]
@@ -54,6 +66,12 @@ export class State {
     async setFileState(state: string) {
         let data = {}
         try {
+            if (!this.dirPath) return
+
+            if (!existsSync(this.dirPath)) {
+                mkdirSync(this.dirPath)
+            }
+
             const file = readFileSync(this.filePath, { encoding: 'utf-8' })
             data = JSON.parse(file)
         } catch (error) {
@@ -67,6 +85,7 @@ export class State {
     async setDbState(state: string) {
         await StateModel.update({ state }, {
             where: {
+                clientId: this.clientId,
                 jid: this.jid
             }
         })
@@ -94,6 +113,7 @@ export class State {
     async deleteDbState() {
         await StateModel.update({ state: null }, {
             where: {
+                clientId: this.clientId,
                 jid: this.jid
             }
         })

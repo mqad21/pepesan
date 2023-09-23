@@ -1,4 +1,4 @@
-import { isJidGroup, isJidUser, proto } from '@whiskeysockets/baileys'
+import { ConnectionState, isJidGroup, isJidUser, proto } from '@whiskeysockets/baileys'
 import axios from 'axios'
 import StringExtractor from './StringExtractor'
 
@@ -154,4 +154,26 @@ export const formatString = (text: string, params: any) => {
 
 export const isValidJid = (jid: string) => {
     return jid.includes('@s.whatsapp.net')
+}
+
+export const getConnectionStatusString = (state: Partial<ConnectionState>) => {
+    if (state.connection === 'open') {
+        return 'Connected'
+    }
+    if (state.connection === 'connecting') {
+        return 'Connecting'
+    }
+    if (state.connection === 'close') {
+        return 'Disconnected'
+    }
+
+    if (state.qr && !state.receivedPendingNotifications) {
+        return 'Scanning QR'
+    }
+
+    if (!state.qr && state.receivedPendingNotifications) {
+        return 'Connected'
+    }
+
+    return 'Unknown'
 }

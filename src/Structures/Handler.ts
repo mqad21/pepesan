@@ -20,9 +20,12 @@ export class Handler {
     private _menus?: { [key: string]: MenuObject }
 
     constructor(clientId: string, messageHandler: MessageHandler) {
-        this.clientId = clientId
         this._router = messageHandler.router
         this.socket = messageHandler.socket
+        // Init client ID
+        this.clientId = clientId
+        this._router.clientId = clientId
+        Response.clientId = clientId
     }
 
     private get text(): string {
@@ -99,13 +102,13 @@ export class Handler {
     }
 
     private async initState() {
-        const state = new State(this.jid!)
+        const state = new State(this.clientId, this.jid!)
         this._state = await state.get()
         this._stateObject = state
     }
 
     private async initMenu() {
-        const menu = new Menu(this.jid!)
+        const menu = new Menu(this.clientId, this.jid!)
         this._menus = await menu.get()
         this._menuObject = menu
     }

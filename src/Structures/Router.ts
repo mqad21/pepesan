@@ -4,6 +4,7 @@ import { Menu } from "./Menu"
 
 export class Router {
 
+    clientId?: string
     protected _routes: RouteMap
     protected _keys: string[]
     protected _middlewares: Middleware[]
@@ -40,7 +41,7 @@ export class Router {
         const middleware = async (request: Request) => {
             const menu = request.menu
             if (!menu) return false
-            const menuObject = new Menu(request.jid!)
+            const menuObject = new Menu(this.clientId!, request.jid!)
             const menus = await menuObject.get()
             if (menus[path]) {
                 return true

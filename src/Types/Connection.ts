@@ -2,6 +2,8 @@ import { ConnectionState, WAMessage } from "@whiskeysockets/baileys"
 import { Model } from "../Structures"
 import { Dialect } from "sequelize"
 
+export type ConnectionEvent = (clientId: string, state: Partial<ConnectionState>) => void
+
 export type Config = {
     id?: string,
     version?: [number, number, number],
@@ -10,12 +12,13 @@ export type Config = {
     browserName?: string,
     allowedNumbers?: string[], // set to null wheter is allowed for all numbers
     blockedNumbers?: string[], // e.g.: ["6281234567890", "6289876543210"]
-    onOpen?: (state: Partial<ConnectionState>) => void
-    onClose?: (state: Partial<ConnectionState>) => void
-    onReconnect?: (state: Partial<ConnectionState>) => void
-    onQR?: (state: Partial<ConnectionState>) => void,
-    onMessage?: (message: WAMessage) => Promise<void>,
+    onOpen?: ConnectionEvent
+    onClose?: ConnectionEvent
+    onReconnect?: ConnectionEvent
+    onQR?: ConnectionEvent,
+    onMessage?: (clientId: string, message: WAMessage) => Promise<void>,
     db?: DbConfig,
+    server?: ServerConfig,
     models?: typeof Model[],
     menuTemplate?: string,
     menuHeader?: string,
@@ -25,6 +28,8 @@ export type Config = {
     readBeforeReply?: boolean,
     typingBeforeReply?: boolean,
     reusableMenu?: boolean,
+    clientIds?: Set<string>,
+    maxRetries?: number,
 }
 
 export type DbConfig = {
@@ -37,4 +42,18 @@ export type DbConfig = {
     path?: string // path to .sqlite file
     syncAlter?: boolean
     timezone?: string
+}
+
+export type ServerConfig = {
+    port?: number
+    prefixPath?: string
+    authKey?: string
+}
+
+export type ServerMethod = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options' | 'trace'
+
+export type ServerRoute = {
+    path: string,
+    method: ServerMethod,
+    handler: (req: any, res: any) => void
 }
