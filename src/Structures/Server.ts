@@ -3,6 +3,7 @@ import express, { Router } from 'express'
 import { ServerRoute } from '../Types'
 import Pepesan from './Pepesan'
 import { getQrImage, getQrString, getStatus, newConnection, removeConnection } from './Server/ConnectionController'
+import { sendMessage } from './Server/MessageController'
 
 export default class Server {
 
@@ -77,6 +78,11 @@ export default class Server {
                 path: '/disconnect/:id?',
                 method: 'post',
                 handler: removeConnection
+            },
+            {
+                path: '/send/:id?',
+                method: 'post',
+                handler: sendMessage
             }
         ]
     }

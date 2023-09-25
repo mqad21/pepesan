@@ -11,6 +11,7 @@ const router = require("./router");
             path: './example/data.sqlite',
         },
         server: {
+            port: 3030,
             authKey: '123456',
         },
         maxRetries: 1,
@@ -18,6 +19,8 @@ const router = require("./router");
         menuHeader: "===== Pilihan Menu =====",
         stateType: 'file',
         statePath: './example/state',
+        clientIds: ['user1'],
+        typingBeforeReply: true,
     }
 
     const pepesan = Pepesan.init(router, config)

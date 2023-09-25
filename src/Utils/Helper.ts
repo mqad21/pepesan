@@ -177,3 +177,7 @@ export const getConnectionStatusString = (state: Partial<ConnectionState>) => {
 
     return 'Unknown'
 }
+
+export const sleep = (ms: number) => {
+    return new Promise(resolve => setTimeout(resolve, ms))
+}

@@ -14,39 +14,39 @@ export class Response {
     }
 
     static get image() {
-        return this.getResponseClass(Image)
+        return this.getResponseClass(Image) as typeof Image
     }
 
     static get text() {
-        return this.getResponseClass(Text)
+        return this.getResponseClass(Text) as typeof Text
     }
 
     static get sticker() {
-        return this.getResponseClass(Sticker)
+        return this.getResponseClass(Sticker) as typeof Sticker
     }
 
     static get audio() {
-        return this.getResponseClass(Audio)
+        return this.getResponseClass(Audio) as typeof Audio
     }
 
     static get video() {
-        return this.getResponseClass(Video)
+        return this.getResponseClass(Video) as typeof Video
     }
 
     static get button() {
-        return this.getResponseClass(Button)
+        return this.getResponseClass(Button) as typeof Button
     }
 
     static get list() {
-        return this.getResponseClass(List)
+        return this.getResponseClass(List) as typeof List
     }
 
     static get menu() {
-        return this.getResponseClass(MenuResponse.Menu)
+        return this.getResponseClass(MenuResponse.Menu) as typeof MenuResponse.Menu
     }
 
     static get document() {
-        return this.getResponseClass(Document)
+        return this.getResponseClass(Document) as typeof Document
     }
 
 }
@@ -91,5 +91,7 @@ export type MenuObject = { text: string, value: string, code?: string }
 
 export type ExternalRequest = {
     jid: string,
-    text: string
+    text?: string,
+    media?: string | Buffer,
+    type?: RequestType | 'text'
 }

@@ -1,12 +1,12 @@
 import { Boom } from "@hapi/boom"
-import makeWASocket, { AnyMessageContent, AuthenticationState, ConnectionState, DisconnectReason, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
+import makeWASocket, { AnyMessageContent, AuthenticationState, ConnectionState, DisconnectReason, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
 import fs from 'fs'
 import path from 'path'
 import { Handler, Router } from "."
 import { Database } from "../Database"
 import { Model } from "../Structures"
-import { Config, ConnectionEvent, DbConfig, ExternalRequest, ServerConfig } from "../Types"
-import { isValidJid, parseJid } from "../Utils"
+import { Config, ConnectionEvent, DbConfig, ExternalRequest, MessageResponse, RequestType, Response, ServerConfig } from "../Types"
+import { isValidJid, parseJid, sleep } from "../Utils"
 import Server from "./Server"
 
 const connectionAttempts = new Map<string, number>()
@@ -187,6 +187,34 @@ export default class Pepesan {
         }
     }
 
+    private getMessageContentFromExternalRequest(request: ExternalRequest): AnyMessageContent | undefined {
+        let response: MessageResponse | undefined
+        const type = request.type ?? 'text'
+        switch (type) {
+            case 'image':
+                response = request.media ? typeof request.media === 'string' ? Response.image.fromURL(request.media, request.text) : Response.image.fromBuffer(request.media, request.text) : undefined
+                break;
+            case 'video':
+                response = request.media ? typeof request.media === 'string' ? Response.video.fromURL(request.media, request.text) : Response.video.fromBuffer(request.media, request.text) : undefined
+                break;
+            case 'document':
+                response = request.media ? typeof request.media === 'string' ? Response.document.fromURL(request.media, request.text) : Response.document.fromBuffer(request.media, request.text) : undefined
+                break;
+            case 'audio':
+                response = request.media ? typeof request.media === 'string' ? Response.audio.fromURL(request.media) : Response.audio.fromBuffer(request.media) : undefined
+                break;
+            case 'sticker':
+                response = request.media ? typeof request.media === 'string' ? Response.sticker.fromURL(request.media) : Response.sticker.fromBuffer(request.media) : undefined
+                break;
+            case 'text':
+                response = Response.text.fromString(request.text ?? '')
+                break;
+            default:
+                response = undefined
+        }
+        return response?.getMessageContent() as AnyMessageContent
+    }
+
     async execute(request: ExternalRequest, clientId: string = 'default'): Promise<AnyMessageContent[] | undefined> {
         try {
             const sock = this.socks.get(clientId)
@@ -194,20 +222,44 @@ export default class Pepesan {
             if (!isValidJid(request.jid)) {
                 this.handler.reply = async () => { return undefined }
             }
-            const messageInfo = {
+
+            const messageInfo: proto.IWebMessageInfo = {
                 key: {
                     fromMe: false,
                     remoteJid: request.jid
                 },
                 message: {
-                    conversation: request.text
+                    conversation: request.text ?? ''
                 }
             }
+
             await this.handler.setMessageInfo(messageInfo)
             return this.handler.getMessageContents()
         } catch (e) {
             console.error(e)
             return
+        }
+    }
+
+    async send(request: ExternalRequest, number: string, clientId: string = 'default'): Promise<void> {
+        try {
+            const sock = this.socks.get(clientId)
+            if (!sock) throw new Error('Socket is undefined')
+
+            const jid = parseJid(number)
+
+            if (global.CONFIG.typingBeforeReply) {
+                await sock.sendPresenceUpdate("composing", jid)
+            }
+
+            await sleep(500)
+
+            const messageContent = this.getMessageContentFromExternalRequest(request)
+            if (!messageContent) throw new Error('Message content is undefined')
+            
+            await sock.sendMessage(jid, messageContent)
+        } catch (e) {
+            console.error(e)
         }
     }
 
