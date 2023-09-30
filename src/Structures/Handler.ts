@@ -204,6 +204,15 @@ export class Handler {
         try {
             // console.time('callback')
             const messageContents = await this.getMessageContents()
+
+            if (!messageContents?.length) return
+
+            if (global.CONFIG?.readBeforeReply) {
+                await this.readMessage()
+            }
+            if (global.CONFIG?.typingBeforeReply) {
+                await this.typing()
+            }
             for (const content of messageContents) {
                 await this.reply(content)
             }
@@ -385,12 +394,6 @@ export class Handler {
     }
 
     async run() {
-        if (global.CONFIG?.readBeforeReply) {
-            await this.readMessage()
-        }
-        if (global.CONFIG?.typingBeforeReply) {
-            await this.typing()
-        }
         await this.callback()
     }
 
