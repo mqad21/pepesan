@@ -48,6 +48,9 @@ export default class Server {
         const app = express()
         app.use(express.json())
         app.use(this.authMiddleware.bind(this))
+        if (this.pepesan.serverConfig.customRoute) {
+            app.use(this.pepesan.serverConfig.prefixPath!, this.pepesan.serverConfig.customRoute!)
+        }
         app.use(this.pepesan.serverConfig.prefixPath!, this.getRouter())
         app.listen(this.pepesan.serverConfig.port, () => console.log(`Server is running on port ${this.pepesan?.serverConfig.port}`))
     }

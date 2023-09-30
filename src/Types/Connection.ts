@@ -1,6 +1,7 @@
 import { ConnectionState, WAMessage } from "@whiskeysockets/baileys"
 import { Model } from "../Structures"
 import { Dialect } from "sequelize"
+import { Router } from "express"
 
 export type ConnectionEvent = (clientId: string, state: Partial<ConnectionState>) => void
 
@@ -48,6 +49,7 @@ export type ServerConfig = {
     port?: number
     prefixPath?: string
     authKey?: string
+    customRoute?: typeof Router
 }
 
 export type ServerMethod = 'get' | 'post' | 'put' | 'delete' | 'patch' | 'head' | 'options' | 'trace'
