@@ -52,9 +52,9 @@ export class Menu extends MessageResponse {
         return formattedMenus
     }
 
-    async saveToDatabase(jid: string | null) {
+    async saveToDatabase(clientId: string, jid: string | null) {
         if (!jid) return
-        const menu = new MenuState(this.clientId, jid)
+        const menu = new MenuState(clientId, jid)
         await menu.setMenu(this.databaseMenu)
     }
 

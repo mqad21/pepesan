@@ -292,7 +292,7 @@ export class Handler {
         }
 
         if (returnValue instanceof ResponseMenu) {
-            returnValue.saveToDatabase(targetJid ?? this.jid)
+            returnValue.saveToDatabase(this.clientId, targetJid ?? this.jid)
         }
 
         return messageContents
