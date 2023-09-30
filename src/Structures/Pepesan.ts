@@ -153,22 +153,7 @@ export default class Pepesan {
             if (deleteSession) {
                 try {
                     const sessionPath = path.join(this.sessionPath, id)
-                    fs.readdir(sessionPath, (e, files) => {
-                        try {
-                            if (e) {
-                                console.error(e)
-                            }
-                            for (const file of files) {
-                                const fileDir = path.join(sessionPath, file)
-                                if (file !== '.gitignore') {
-                                    fs.unlinkSync(fileDir)
-                                }
-                            }
-                            fs.unlinkSync(sessionPath)
-                        } catch (e: any) {
-                            console.error(e)
-                        }
-                    })
+                    fs.rmSync(sessionPath)
                 } catch (e) {
                     console.error(e)
                 }
