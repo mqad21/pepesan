@@ -1,6 +1,6 @@
 {
   "name": "pepesan",
-  "version": "3.0.8",
+  "version": "3.0.9",
   "description": "Simple automatic WhatsApp message responder",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
