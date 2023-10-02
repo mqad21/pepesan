@@ -153,7 +153,7 @@ export default class Pepesan {
             if (deleteSession) {
                 try {
                     const sessionPath = path.join(this.sessionPath, id)
-                    fs.rmSync(sessionPath)
+                    fs.rmdirSync(sessionPath)
                 } catch (e) {
                     console.error(e)
                 }
