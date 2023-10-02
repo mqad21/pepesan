@@ -4,11 +4,13 @@ import { ServerRoute } from '../Types'
 import Pepesan from './Pepesan'
 import { getQrImage, getQrString, getStatus, newConnection, removeConnection } from './Server/ConnectionController'
 import { sendMessage } from './Server/MessageController'
+import http from 'http'
 
 export default class Server {
 
     private static instance: Server
     public pepesan?: Pepesan
+    public httpServer?: http.Server
 
     static init(pepesan: Pepesan) {
         Server.getInstance().pepesan = pepesan
@@ -52,7 +54,7 @@ export default class Server {
             app.use(this.pepesan.serverConfig.prefixPath!, this.pepesan.serverConfig.customRoute!)
         }
         app.use(this.pepesan.serverConfig.prefixPath!, this.getRouter())
-        app.listen(this.pepesan.serverConfig.port, () => console.log(`Server is running on port ${this.pepesan?.serverConfig.port}`))
+        this.httpServer = app.listen(this.pepesan.serverConfig.port, () => console.log(`Server is running on port ${this.pepesan?.serverConfig.port}`))
     }
 
     private getRoutes(): ServerRoute[] {

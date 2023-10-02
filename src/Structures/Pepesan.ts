@@ -89,6 +89,10 @@ export default class Pepesan {
         global.CONFIG = config
     }
 
+    get server() {
+        return Server.getInstance()
+    }
+
     initDefaultClientIds(): void {
         fs.readdir(this.sessionPath, (e, files) => {
             try {
@@ -241,7 +245,7 @@ export default class Pepesan {
 
             const messageContent = this.getMessageContentFromExternalRequest(request)
             if (!messageContent) throw new Error('Message content is undefined')
-            
+
             await sock.sendMessage(jid, messageContent)
         } catch (e) {
             console.error(e)
