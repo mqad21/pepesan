@@ -100,9 +100,6 @@ export const newConnection = async (req, res) => {
         if (!pepesan) {
             throw new Error('Pepesan is not initialized')
         }
-        if (pepesan.connectionStates.has(id)) {
-            throw new Error('Client is already created')
-        }
         await pepesan.connectClient(id)
         return getServer().sendSuccessResponse(res, { id }, 'Client with id ' + id + ' has been created')
     } catch (error: any) {
