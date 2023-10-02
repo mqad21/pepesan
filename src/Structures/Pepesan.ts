@@ -286,6 +286,8 @@ export default class Pepesan {
                     this.onQR?.(id, state)
                 }
 
+                this.initServer()
+
             } catch (e) {
                 console.error(e)
             }
