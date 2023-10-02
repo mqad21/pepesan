@@ -165,7 +165,11 @@ export default class Pepesan {
                             for (const file of files) {
                                 const fileDir = path.join(sessionPath, file)
                                 if (file !== '.gitignore') {
-                                    fs.unlinkSync(fileDir)
+                                    try {
+                                        fs.unlinkSync(fileDir)
+                                    } catch (e: any) {
+                                        console.error(e)
+                                    }
                                 }
                             }
                             fs.rmSync(sessionPath, { recursive: true, force: true })
@@ -284,11 +288,11 @@ export default class Pepesan {
                     // reconnect if not logged out
                     if (shouldReconnect) {
                         this.onReconnect?.(id, state)
+                        await this.connectClient(id)
                     } else {
                         this.onClose?.(id, state)
                         await this.disconnectClient(id, true)
                     }
-                    await this.connectClient(id)
                     connectionAttempts.set(id, retry + 1)
                 } else if (state.connection === 'close' && retry >= this.maxRetries) {
                     this.onClose?.(id, state)
@@ -304,7 +308,7 @@ export default class Pepesan {
                 this.initServer()
 
             } catch (e) {
-                console.error(e)
+                console.error("🚫 Error on connection update: ", e)
             }
         })
 
@@ -325,7 +329,7 @@ export default class Pepesan {
                 }
                 return
             } catch (e) {
-                console.error(e)
+                console.error("🚫 Error on message upsert: ", e)
             }
         })
     }

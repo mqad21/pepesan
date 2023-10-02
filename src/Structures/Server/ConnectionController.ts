@@ -110,12 +110,13 @@ export const newConnection = async (req, res) => {
 export const removeConnection = async (req, res) => {
     try {
         const id = req.params?.id ?? 'default'
+        const removeSession = req.query.removeSession || false
         const server = getServer()
         const { pepesan } = server
         if (!pepesan) {
             throw new Error('Pepesan is not initialized')
         }
-        await pepesan.disconnectClient(id, true)
+        await pepesan.disconnectClient(id, removeSession)
         return getServer().sendSuccessResponse(res, null, 'Client with id ' + id + ' has been removed')
     } catch (error: any) {
         return getServer().sendErrorResponse(res, error.message)
