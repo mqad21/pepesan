@@ -123,7 +123,7 @@ export default class Pepesan {
             const { state, saveCreds } = await useMultiFileAuthState(sessionPath)
             const socketOptions: UserFacingSocketConfig = {
                 printQRInTerminal: this.printQRInTerminal,
-                // version: this.version,
+                version: this.version,
                 auth: state,
                 browser: [this.browserName, '', ''],
             }
