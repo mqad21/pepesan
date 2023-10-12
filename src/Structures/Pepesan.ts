@@ -184,7 +184,6 @@ export default class Pepesan {
             const sock = this.socks.get(id)
             if (sock) {
                 await sock.logout()
-                await sock.ws.close()
             }
             this.socks.delete(id)
             this.connectionStates.delete(id)
