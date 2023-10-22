@@ -291,11 +291,13 @@ export default class Pepesan {
                     } else {
                         this.onClose?.(id, state)
                         await this.disconnectClient(id, true)
+                        connectionAttempts.set(id, 0)
                     }
                     connectionAttempts.set(id, retry + 1)
                 } else if (state.connection === 'close' && retry >= this.maxRetries) {
                     this.onClose?.(id, state)
                     await this.disconnectClient(id, true)
+                    connectionAttempts.set(id, 0)
                 } else if (state.connection === 'open') {
                     this.onOpen?.(id, state)
                 }
