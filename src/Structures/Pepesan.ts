@@ -284,16 +284,14 @@ export default class Pepesan {
                 const retry = connectionAttempts.get(id) ?? 0
                 if (state.connection === 'close' && retry < this.maxRetries) {
                     const shouldReconnect = (state?.lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
+                    console.log('connection closed due to ', state?.lastDisconnect?.error, ', reconnecting ', shouldReconnect)
                     // reconnect if not logged out
+                    await this.connectClient(id)
                     if (shouldReconnect) {
                         this.onReconnect?.(id, state)
-                        await this.connectClient(id)
                     } else {
-                        this.onClose?.(id, state)
-                        await this.disconnectClient(id, true)
-                        connectionAttempts.set(id, 0)
+                        connectionAttempts.set(id, retry + 1)
                     }
-                    connectionAttempts.set(id, retry + 1)
                 } else if (state.connection === 'close' && retry >= this.maxRetries) {
                     this.onClose?.(id, state)
                     await this.disconnectClient(id, true)
