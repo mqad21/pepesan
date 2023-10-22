@@ -307,7 +307,7 @@ export default class Pepesan {
                 this.initServer()
 
             } catch (e) {
-                console.error("🚫 Error on connection update: ", e)
+                console.error("🚫 Error on connection update: " + e)
             }
         })
 
@@ -328,7 +328,7 @@ export default class Pepesan {
                 }
                 return
             } catch (e) {
-                console.error("🚫 Error on message upsert: ", e)
+                console.error("🚫 Error on message upsert: " + e)
             }
         })
     }
