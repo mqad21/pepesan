@@ -8,6 +8,7 @@ import { Model } from "../Structures"
 import { Config, ConnectionEvent, DbConfig, ExternalRequest, MessageResponse, RequestType, Response, ServerConfig } from "../Types"
 import { isValidJid, parseJid, sleep } from "../Utils"
 import Server from "./Server"
+import Extension from "./Extension"
 
 const connectionAttempts = new Map<string, number>()
 
@@ -37,6 +38,7 @@ export default class Pepesan {
     connectionStates: Map<string, Partial<ConnectionState>> = new Map()
     serverConfig: ServerConfig
     maxRetries: number
+    extensions: Extension[] = []
 
     constructor(router: Router, config: Config = {}) {
         this.id = config.id ?? 'Pepesan'
@@ -354,6 +356,11 @@ export default class Pepesan {
             return !this.blockedJids.includes(jid)
         }
         return true
+    }
+
+    addExtension(extension: Extension): void {
+        extension.setPepesan(this)
+        extension.setRouter(this.router)
     }
 
 }

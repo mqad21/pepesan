@@ -1,4 +1,5 @@
 const Pepesan = require("../dist");
+const ExampleExtension = require("./ExampleExtension");
 const router = require("./router");
 
 (async () => {
@@ -25,6 +26,9 @@ const router = require("./router");
 
     const pepesan = Pepesan.init(router, config)
     await pepesan.connect()
+
+    const exampleExtension = ExampleExtension.init("survey")
+    pepesan.addExtension(exampleExtension)
 
     // Get response from external request
     const response = await pepesan.execute({ jid: "6281260763660@s.whatsapp.net", text: "Login" })
