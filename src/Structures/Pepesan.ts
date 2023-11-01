@@ -8,7 +8,7 @@ import { Model } from "../Structures"
 import { Config, ConnectionEvent, DbConfig, ExternalRequest, MessageResponse, RequestType, Response, ServerConfig } from "../Types"
 import { isValidJid, parseJid, sleep } from "../Utils"
 import Server from "./Server"
-import Extension from "./Extension"
+import { Extension } from "./Extension"
 
 const connectionAttempts = new Map<string, number>()
 

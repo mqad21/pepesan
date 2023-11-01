@@ -50,9 +50,11 @@ export class Database {
 
     private initModels() {
         const sqlModels = [...Object.values(PepesanModels), ...this.models]
+        const sql = this.sql!
         for (const model of sqlModels) {
+            // @ts-ignore
             model.init(model.attributes, {
-                sequelize: this.sql!
+                sequelize: sql
             })
             model.sync({ alter: this.syncAlter })
         }

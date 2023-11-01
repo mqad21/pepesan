@@ -8,7 +8,9 @@ export abstract class Extension {
 
     abstract setRouter(router: Router): void
 
-    abstract getModels?(): Model[]
+    getModels(): Model[] {
+        return []
+    }
 
     setPepesan(pepesan: Pepesan): void {
         this.pepesan = pepesan
