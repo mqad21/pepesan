@@ -16,7 +16,11 @@ export const parseJid = (number: string) => {
 }
 
 export const parseNumber = (jid: string) => {
-    return jid.split("@s.whatsapp.net")[0]
+    let number = jid.split("@s.whatsapp.net")[0]
+    if (number.includes(":")) {
+        number = number.split(":")[0]
+    }
+    return number
 }
 
 export const getTextFromMessage = (message?: proto.IMessage): string => {

@@ -59,3 +59,10 @@ export type ServerRoute = {
     method: ServerMethod,
     handler: (req: any, res: any) => void
 }
+
+export type UserInfo = {
+    number: string,
+    name?: string,
+    imgUrl?: string,
+    status?: string
+} & Record<string, any>

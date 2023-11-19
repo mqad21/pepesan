@@ -2,7 +2,7 @@ import { WASocket } from '@whiskeysockets/baileys'
 import express, { Router } from 'express'
 import { ServerRoute } from '../Types'
 import Pepesan from './Pepesan'
-import { getQrImage, getQrString, getStatus, newConnection, removeConnection } from './Server/ConnectionController'
+import { getAllClients, getQrImage, getQrString, getStatus, newConnection, removeConnection } from './Server/ConnectionController'
 import { sendMessage } from './Server/MessageController'
 import http from 'http'
 
@@ -59,6 +59,11 @@ export default class Server {
 
     private getRoutes(): ServerRoute[] {
         return [
+            {
+                path: '/clients',
+                method: 'get',
+                handler: getAllClients
+            },
             {
                 path: '/qr/:id?',
                 method: 'get',

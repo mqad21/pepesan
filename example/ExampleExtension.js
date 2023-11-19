@@ -1,4 +1,4 @@
-const { default: Extension } = require("../dist/Structures/Extension")
+const { Extension } = require("../dist/Structures/Extension")
 
 module.exports = class ExampleExtension extends Extension {
     title

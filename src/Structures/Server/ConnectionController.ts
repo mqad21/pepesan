@@ -10,6 +10,32 @@ const getServer = () => {
     return server
 }
 
+export const getAllClients = (_, res) => {
+    try {
+        const server = getServer()
+        const { pepesan } = server
+
+        if (!pepesan) {
+            throw new Error('Pepesan is not initialized')
+        }
+
+        const clients = Array.from(pepesan.connectionStates).map(connectionState => {
+            const clientId = connectionState[0]
+            return {
+                ...connectionState[1],
+                id: clientId,
+                connectionStatus: getConnectionStatusString(connectionState[1]),
+                ...pepesan.userInfos.get(clientId)
+            }
+        })
+
+        return getServer().sendSuccessResponse(res, clients)
+    } catch (error: any) {
+        return getServer().sendErrorResponse(res, error.message)
+    }
+
+}
+
 const getQr = (req: any) => {
     const server = getServer()
     const { pepesan } = server

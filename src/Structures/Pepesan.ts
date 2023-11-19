@@ -5,8 +5,8 @@ import path from 'path'
 import { Handler, Router } from "."
 import { Database } from "../Database"
 import { Model } from "../Structures"
-import { Config, ConnectionEvent, DbConfig, ExternalRequest, MessageResponse, RequestType, Response, ServerConfig } from "../Types"
-import { isValidJid, parseJid, sleep } from "../Utils"
+import { Config, ConnectionEvent, DbConfig, ExternalRequest, MessageResponse, RequestType, Response, ServerConfig, UserInfo } from "../Types"
+import { isValidJid, parseJid, parseNumber, sleep } from "../Utils"
 import Server from "./Server"
 import { Extension } from "./Extension"
 
@@ -36,6 +36,7 @@ export default class Pepesan {
     socks: Map<string, WASocket>
     clientIds: Set<string>
     connectionStates: Map<string, Partial<ConnectionState>> = new Map()
+    userInfos: Map<string, UserInfo> = new Map()
     serverConfig: ServerConfig
     maxRetries: number
     extensions: Extension[] = []
@@ -141,11 +142,23 @@ export default class Pepesan {
             this.socks.set(id, sock)
             this.initEvents(id)
             this.connectionStates.set(id, {})
+
+            const userInfo =this.getUserInfo(sock)
+            this.userInfos.set(id, userInfo)
             console.log("✅ Client with id " + id + " connected " + "(attempt " + (connectionAttempts.get(id) ?? 0) + ")")
         } catch (e) {
             console.error(e)
         }
 
+    }
+
+    private getUserInfo(sock: WASocket): UserInfo {
+        return {
+            number: parseNumber(sock.user?.id ?? ''),
+            name: sock.user?.name ?? '',
+            imgUrl: sock.user?.imgUrl ?? '',
+            status: sock.user?.status ?? '',
+        } as UserInfo
     }
 
     async disconnect(deleteSession: boolean = false): Promise<void> {
