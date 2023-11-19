@@ -90,13 +90,13 @@ export default class Pepesan {
         this.initDefaultClientIds()
 
         this.initDatabase()
-        
+
         this.initServer()
 
         if (this.enableHttpServer) {
             this.startServer()
         }
-        
+
         global.CONFIG = config
     }
 
@@ -304,20 +304,18 @@ export default class Pepesan {
                 const state = connectionState
                 this.connectionStates.set(id, state)
                 const retry = connectionAttempts.get(id) ?? 0
-                if (state.connection === 'close' && retry < this.maxRetries) {
+                if (state.connection === 'close') {
                     const shouldReconnect = (state?.lastDisconnect?.error as Boom)?.output?.statusCode !== DisconnectReason.loggedOut
                     console.log('connection closed due to ', state?.lastDisconnect?.error, ', reconnecting ', shouldReconnect)
                     // reconnect if not logged out
-                    await this.connectClient(id)
                     if (shouldReconnect) {
+                        await this.connectClient(id)
                         this.onReconnect?.(id, state)
-                    } else {
                         connectionAttempts.set(id, retry + 1)
+                    } else {
+                        this.onClose?.(id, state)
+                        await this.disconnectClient(id, true)
                     }
-                } else if (state.connection === 'close' && retry >= this.maxRetries) {
-                    this.onClose?.(id, state)
-                    await this.disconnectClient(id, true)
-                    connectionAttempts.set(id, 0)
                 } else if (state.connection === 'open') {
                     this.onOpen?.(id, state)
                 }
@@ -325,8 +323,6 @@ export default class Pepesan {
                 if (state.qr) {
                     this.onQR?.(id, state)
                 }
-
-                this.initServer()
 
             } catch (e) {
                 console.error("🚫 Error on connection update: " + e)
