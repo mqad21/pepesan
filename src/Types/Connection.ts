@@ -19,6 +19,7 @@ export type Config = {
     onQR?: ConnectionEvent,
     onMessage?: (clientId: string, message: WAMessage) => Promise<void>,
     db?: DbConfig,
+    enableHttpServer?: boolean,
     server?: ServerConfig,
     models?: typeof Model[],
     menuTemplate?: string,

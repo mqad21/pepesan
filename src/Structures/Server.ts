@@ -97,7 +97,7 @@ export default class Server {
         ]
     }
 
-    private getRouter() {
+    public getRouter() {
         const router = Router()
         for (const route of this.getRoutes()) {
             router[route.method](route.path, route.handler)

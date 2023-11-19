@@ -40,6 +40,7 @@ export default class Pepesan {
     serverConfig: ServerConfig
     maxRetries: number
     extensions: Extension[] = []
+    enableHttpServer: boolean
 
     constructor(router: Router, config: Config = {}) {
         this.id = config.id ?? 'Pepesan'
@@ -66,6 +67,7 @@ export default class Pepesan {
             timezone: config.db?.dialect === 'sqlite' ? '+00:00' : config.db?.timezone ?? '+00:00',
         }
 
+        this.enableHttpServer = config.enableHttpServer ?? true
         this.serverConfig = {
             ...config.server,
             port: config.server?.port ?? 3000,
@@ -86,9 +88,15 @@ export default class Pepesan {
         }
 
         this.initDefaultClientIds()
+
         this.initDatabase()
+        
         this.initServer()
-        this.startServer()
+
+        if (this.enableHttpServer) {
+            this.startServer()
+        }
+        
         global.CONFIG = config
     }
 
@@ -143,7 +151,7 @@ export default class Pepesan {
             this.initEvents(id)
             this.connectionStates.set(id, {})
 
-            const userInfo =this.getUserInfo(sock)
+            const userInfo = this.getUserInfo(sock)
             this.userInfos.set(id, userInfo)
             console.log("✅ Client with id " + id + " connected " + "(attempt " + (connectionAttempts.get(id) ?? 0) + ")")
         } catch (e) {
