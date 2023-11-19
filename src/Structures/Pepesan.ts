@@ -211,7 +211,6 @@ export default class Pepesan {
             this.socks.delete(id)
             this.connectionStates.delete(id)
             console.log("❌ Client with id " + id + " disconnected")
-            this.initServer()
         } catch (e) {
             console.error(e)
         }
