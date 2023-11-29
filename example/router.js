@@ -4,6 +4,8 @@ const BotController = require("./BotController")
 
 const router = new Router()
 
+router.keyword("Image", [BotController, 'sendImage'])
+
 router.keyword("Menu", [BotController, 'showMenu'])
 
 router.menu("menu {menu}", [BotController, 'selectMenu'])

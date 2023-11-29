@@ -48,5 +48,4 @@ export class BufferImage extends Image {
     getMessageContent(): AnyMessageContent | undefined {
         return { image: this.buffer, caption: this.caption }
     }
-
 }
