@@ -34,6 +34,14 @@ export class Controller {
         return messages
     }
 
+    protected async typing() {
+        return await this.handler.typing()
+    }
+
+    protected async readMessage() {
+        return await this.handler.readMessage()
+    }
+
     protected async setState(state: string) {
         return await this.handler.request.stateObject?.setState(state)
     }

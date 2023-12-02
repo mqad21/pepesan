@@ -397,11 +397,11 @@ export class Handler {
         await this.callback()
     }
 
-    private async readMessage() {
+    async readMessage() {
         await this.socket?.readMessages([this._messageInfo!.key])
     }
 
-    private async typing() {
+    async typing() {
         await this.socket?.sendPresenceUpdate("composing", this.jid!)
     }
 
