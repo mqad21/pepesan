@@ -40,7 +40,7 @@ export class Handler {
     }
 
     private get menu(): string | undefined {
-        return this.text
+        return this.text.toLowerCase()
     }
 
     private get list(): ListObject {
@@ -241,7 +241,7 @@ export class Handler {
                 break
             case 'menu':
                 if (this.menu) {
-                    text = this._menus?.[this.menu].value
+                    text = this._menus?.[this.menu]?.value ?? this.text
                 }
                 break
             default:
