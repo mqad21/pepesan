@@ -1,5 +1,5 @@
 import { Boom } from "@hapi/boom"
-import makeWASocket, { AnyMessageContent, AuthenticationState, ConnectionState, DisconnectReason, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
+import makeWASocket, { AnyMessageContent, AuthenticationState, Browsers, ConnectionState, DisconnectReason, proto, useMultiFileAuthState, UserFacingSocketConfig, WAMessage, WASocket } from "@whiskeysockets/baileys"
 import fs from 'fs'
 import path from 'path'
 import { Handler, Router } from "."
@@ -136,7 +136,7 @@ export default class Pepesan {
                 printQRInTerminal: this.printQRInTerminal,
                 version: this.version,
                 auth: state,
-                browser: [this.browserName, '', ''],
+                browser: Browsers.ubuntu(this.browserName),
             }
             this.auth = state
             this.saveCreds = async () => {
