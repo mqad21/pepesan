@@ -56,7 +56,7 @@ export class ArrayOfArrayStringList extends List {
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return { buttonText: this.buttonText, title: this.title, text: this.text, footer: this.footer, sections: this.formattedList }
+        return
     }
 
 }
@@ -85,7 +85,7 @@ export class ArrayOfArrayOfObjectList extends List {
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return { buttonText: this.buttonText, title: this.title, text: this.text, footer: this.footer, sections: this.formattedList }
+        return
     }
 
 }

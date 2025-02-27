@@ -47,7 +47,7 @@ export class ArrayOfStringButton extends Button {
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return { text: this.text, footer: this.footer, buttons: this.formattedButtons }
+        return
     }
 
 }
@@ -73,7 +73,7 @@ export class ArrayOfObjectButton extends Button {
     }
 
     getMessageContent(): AnyMessageContent | undefined {
-        return { text: this.text, footer: this.footer, buttons: this.formattedButtons, }
+        return
     }
 
 }
