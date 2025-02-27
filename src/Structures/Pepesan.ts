@@ -46,7 +46,7 @@ export default class Pepesan {
         this.id = config.id ?? 'Pepesan'
         this.clientIds = config.clientIds ?? new Set(['default'])
         this.socks = new Map()
-        this.version = config.version ?? [2, 2323, 4]
+        this.version = config.version
         this.sessionPath = config.sessionPath ?? './session'
         this.browserName = config.browserName ?? 'Pepesan'
         this.allowedJids = config.allowedNumbers?.map((number: string) => parseJid(number))
